@@ -75,6 +75,8 @@ a { color: inherit; text-decoration: none; }
 .concepts li { padding: 3px 0; border-bottom: 0.5px solid var(--border); }
 .concepts li:last-child { border-bottom: none; }
 .concepts li::before { content: "→ "; color: var(--text-3); }
+.yt-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 12px; font-weight: 500; color: #ff4444; }
+.yt-link:hover { color: #cc0000; }
 
 footer { border-top: 0.5px solid var(--border); padding: 1.5rem 2rem; text-align: center; font-size: 12.5px; color: var(--text-3); }
 </style>
@@ -113,22 +115,22 @@ const tracks = {
     sub: "Cloud infrastructure fundamentals",
     sections: {
       "Networking": [
-        { name: "VPC & Subnets", tag: "Networking", level: "beg", concepts: ["What is a VPC (Virtual Private Cloud)", "Public vs private subnets", "CIDR blocks (e.g. 10.0.0.0/16)", "Availability zones & subnet mapping", "Internet Gateway vs NAT Gateway"] },
-        { name: "Route Tables", tag: "Networking", level: "beg", concepts: ["Default vs custom route tables", "Local routes vs internet routes", "Associating route tables with subnets", "Route propagation basics"] },
-        { name: "Security Groups & NACLs", tag: "Security", level: "beg", concepts: ["Stateful SGs vs stateless NACLs", "Inbound & outbound rules", "Port/IP-based allow/deny rules", "NACL rule evaluation order (priority numbers)", "Layering SGs with NACLs for defense-in-depth"] },
-        { name: "Load Balancing (ALB/NLB)", tag: "Networking", level: "int", concepts: ["ALB (L7) vs NLB (L4) differences", "Target groups & health checks", "Listener rules & path-based routing", "SSL termination on ALB", "Sticky sessions & connection draining"] },
+        { name: "VPC & Subnets", tag: "Networking", level: "beg", youtube: "https://www.youtube.com/watch?v=TUTqYEZZUdc", concepts: ["What is a VPC (Virtual Private Cloud)", "Public vs private subnets", "CIDR blocks (e.g. 10.0.0.0/16)", "Availability zones & subnet mapping", "Internet Gateway vs NAT Gateway"] },
+        { name: "Route Tables", tag: "Networking", level: "beg", youtube: "https://www.youtube.com/watch?v=TUTqYEZZUdc", concepts: ["Default vs custom route tables", "Local routes vs internet routes", "Associating route tables with subnets", "Route propagation basics"] },
+        { name: "Security Groups & NACLs", tag: "Security", level: "beg", youtube: "https://www.youtube.com/watch?v=JWoNu2Mtpdg", concepts: ["Stateful SGs vs stateless NACLs", "Inbound & outbound rules", "Port/IP-based allow/deny rules", "NACL rule evaluation order (priority numbers)", "Layering SGs with NACLs for defense-in-depth"] },
+        { name: "Load Balancing (ALB/NLB)", tag: "Networking", level: "int", youtube: "https://www.youtube.com/watch?v=4RfWO07ZY0M", concepts: ["ALB (L7) vs NLB (L4) differences", "Target groups & health checks", "Listener rules & path-based routing", "SSL termination on ALB", "Sticky sessions & connection draining"] },
       ],
       "Compute & Containers": [
-        { name: "ECS (Elastic Container Service)", tag: "Containers", level: "int", concepts: ["Task definitions & containers", "ECS services vs standalone tasks", "Fargate (serverless) vs EC2 launch type", "Service auto-scaling policies", "ECS service discovery"] },
-        { name: "EKS (Elastic Kubernetes Svc)", tag: "Containers", level: "adv", concepts: ["Managed node groups vs self-managed", "Cluster autoscaler & Karpenter", "AWS Load Balancer Controller (ALB ingress)", "EBS CSI & EFS CSI drivers", "IRSA (IAM Roles for Service Accounts)", "CoreDNS, kube-proxy, VPC-CNI plugins"] },
+        { name: "ECS (Elastic Container Service)", tag: "Containers", level: "int", youtube: "https://www.youtube.com/watch?v=AYAh6YDXuho", concepts: ["Task definitions & containers", "ECS services vs standalone tasks", "Fargate (serverless) vs EC2 launch type", "Service auto-scaling policies", "ECS service discovery"] },
+        { name: "EKS (Elastic Kubernetes Svc)", tag: "Containers", level: "adv", youtube: "https://www.youtube.com/watch?v=X48VuDVv0do", concepts: ["Managed node groups vs self-managed", "Cluster autoscaler & Karpenter", "AWS Load Balancer Controller (ALB ingress)", "EBS CSI & EFS CSI drivers", "IRSA (IAM Roles for Service Accounts)", "CoreDNS, kube-proxy, VPC-CNI plugins"] },
       ],
       "Data & Storage": [
-        { name: "S3 & CloudFront", tag: "Storage / CDN", level: "beg", concepts: ["Buckets, objects, and prefixes", "Storage classes (Standard, IA, Glacier)", "Bucket policies vs ACLs", "Static website hosting on S3", "CloudFront distributions & origins", "Cache behaviors & TTL", "OAC (Origin Access Control)"] },
-        { name: "RDS & DynamoDB", tag: "Databases", level: "int", concepts: ["RDS: Multi-AZ vs read replicas", "Parameter groups & snapshots", "DynamoDB: partition key + sort key design", "Provisioned vs on-demand capacity", "DynamoDB Streams & TTL", "Global tables (multi-region)"] },
+        { name: "S3 & CloudFront", tag: "Storage / CDN", level: "beg", youtube: "https://www.youtube.com/watch?v=fGspu_Sa8co", concepts: ["Buckets, objects, and prefixes", "Storage classes (Standard, IA, Glacier)", "Bucket policies vs ACLs", "Static website hosting on S3", "CloudFront distributions & origins", "Cache behaviors & TTL", "OAC (Origin Access Control)"] },
+        { name: "RDS & DynamoDB", tag: "Databases", level: "int", youtube: "https://www.youtube.com/watch?v=KcJ8-I7kD_w", concepts: ["RDS: Multi-AZ vs read replicas", "Parameter groups & snapshots", "DynamoDB: partition key + sort key design", "Provisioned vs on-demand capacity", "DynamoDB Streams & TTL", "Global tables (multi-region)"] },
       ],
       "Messaging & DNS": [
-        { name: "SQS & SNS", tag: "Messaging", level: "int", concepts: ["SQS: standard vs FIFO queues", "Message visibility timeout & DLQ", "SNS topics & fan-out pattern", "SNS to SQS subscriptions", "Event-driven architecture basics"] },
-        { name: "Route 53 & ACM", tag: "DNS / TLS", level: "int", concepts: ["DNS record types: A, CNAME, ALIAS", "Routing policies: simple, weighted, latency, failover", "Health checks in Route 53", "ACM: requesting & validating TLS certs", "ACM with ALB & CloudFront"] },
+        { name: "SQS & SNS", tag: "Messaging", level: "int", youtube: "https://www.youtube.com/watch?v=VXsAgYoC1Jc", concepts: ["SQS: standard vs FIFO queues", "Message visibility timeout & DLQ", "SNS topics & fan-out pattern", "SNS to SQS subscriptions", "Event-driven architecture basics"] },
+        { name: "Route 53 & ACM", tag: "DNS / TLS", level: "int", youtube: "https://www.youtube.com/watch?v=LY3WkqosDPA", concepts: ["DNS record types: A, CNAME, ALIAS", "Routing policies: simple, weighted, latency, failover", "Health checks in Route 53", "ACM: requesting & validating TLS certs", "ACM with ALB & CloudFront"] },
       ]
     }
   },
@@ -136,9 +138,9 @@ const tracks = {
     sub: "Container fundamentals",
     sections: {
       "Basics": [
-        { name: "Container Concepts", tag: "Fundamentals", level: "beg", concepts: ["Containers vs VMs", "Images, layers & the Union FS", "Docker Hub & image registries (ECR)", "docker build / run / exec / logs", "Volumes vs bind mounts"] },
-        { name: "Dockerfile", tag: "Image Building", level: "beg", concepts: ["FROM, RUN, COPY, CMD, ENTRYPOINT", "Multi-stage builds for smaller images", "Layer caching and build order", ".dockerignore best practices", "ARG vs ENV variables"] },
-        { name: "Networking & Compose", tag: "Networking", level: "int", concepts: ["Bridge, host, overlay networks", "Container-to-container DNS", "docker compose: services, volumes, networks", "Depends_on & healthcheck", "Environment variable management"] },
+        { name: "Container Concepts", tag: "Fundamentals", level: "beg", youtube: "https://www.youtube.com/watch?v=3c-iBn73dDE", concepts: ["Containers vs VMs", "Images, layers & the Union FS", "Docker Hub & image registries (ECR)", "docker build / run / exec / logs", "Volumes vs bind mounts"] },
+        { name: "Dockerfile", tag: "Image Building", level: "beg", youtube: "https://www.youtube.com/watch?v=3c-iBn73dDE", concepts: ["FROM, RUN, COPY, CMD, ENTRYPOINT", "Multi-stage builds for smaller images", "Layer caching and build order", ".dockerignore best practices", "ARG vs ENV variables"] },
+        { name: "Networking & Compose", tag: "Networking", level: "int", youtube: "https://www.youtube.com/watch?v=3c-iBn73dDE", concepts: ["Bridge, host, overlay networks", "Container-to-container DNS", "docker compose: services, volumes, networks", "Depends_on & healthcheck", "Environment variable management"] },
       ]
     }
   },
@@ -146,8 +148,8 @@ const tracks = {
     sub: "Infrastructure as Code",
     sections: {
       "Core IaC": [
-        { name: "Terraform Basics", tag: "IaC", level: "beg", concepts: ["providers, resources, data sources", "terraform init / plan / apply / destroy", "State file & remote backends (S3 + DynamoDB)", "Variables, outputs, locals", "terraform.tfvars vs environment vars"] },
-        { name: "Modules & Advanced", tag: "IaC", level: "int", concepts: ["Writing reusable modules", "Module versioning with Terraform Registry", "count vs for_each loops", "Dynamic blocks", "Workspaces for multi-env management", "Terragrunt for DRY configs"] },
+        { name: "Terraform Basics", tag: "IaC", level: "beg", youtube: "https://www.youtube.com/watch?v=7xngnjfIlK4", concepts: ["providers, resources, data sources", "terraform init / plan / apply / destroy", "State file & remote backends (S3 + DynamoDB)", "Variables, outputs, locals", "terraform.tfvars vs environment vars"] },
+        { name: "Modules & Advanced", tag: "IaC", level: "int", youtube: "https://www.youtube.com/watch?v=7xngnjfIlK4", concepts: ["Writing reusable modules", "Module versioning with Terraform Registry", "count vs for_each loops", "Dynamic blocks", "Workspaces for multi-env management", "Terragrunt for DRY configs"] },
       ]
     }
   },
@@ -155,8 +157,8 @@ const tracks = {
     sub: "CI/CD automation",
     sections: {
       "CI/CD": [
-        { name: "Workflows & Triggers", tag: "CI/CD", level: "beg", concepts: ["YAML workflow syntax", "on: push, pull_request, schedule triggers", "Jobs, steps, and runners", "Environment variables & secrets", "Matrix builds (multi OS/version)"] },
-        { name: "Advanced Pipelines", tag: "CI/CD", level: "int", concepts: ["Reusable workflows (workflow_call)", "Composite actions", "Caching dependencies (actions/cache)", "Build & push Docker images to ECR", "Deploying to ECS/EKS from Actions", "OIDC for keyless AWS auth"] },
+        { name: "Workflows & Triggers", tag: "CI/CD", level: "beg", youtube: "https://www.youtube.com/watch?v=R8_veQiYBjI", concepts: ["YAML workflow syntax", "on: push, pull_request, schedule triggers", "Jobs, steps, and runners", "Environment variables & secrets", "Matrix builds (multi OS/version)"] },
+        { name: "Advanced Pipelines", tag: "CI/CD", level: "int", youtube: "https://www.youtube.com/watch?v=R8_veQiYBjI", concepts: ["Reusable workflows (workflow_call)", "Composite actions", "Caching dependencies (actions/cache)", "Build & push Docker images to ECR", "Deploying to ECS/EKS from Actions", "OIDC for keyless AWS auth"] },
       ]
     }
   },
@@ -164,8 +166,8 @@ const tracks = {
     sub: "Programming foundation",
     sections: {
       "Language Core": [
-        { name: "Python Fundamentals", tag: "Language", level: "beg", concepts: ["Data types: str, int, list, dict, set, tuple", "Control flow: if/elif/else, for, while", "Functions, args, kwargs, *args", "Classes & basic OOP", "File I/O & exception handling"] },
-        { name: "Intermediate Python", tag: "Libraries", level: "int", concepts: ["List comprehensions & generators", "Decorators & context managers", "Virtual environments (venv, conda)", "requests, boto3, os, pathlib, logging", "asyncio basics for async code"] },
+        { name: "Python Fundamentals", tag: "Language", level: "beg", youtube: "https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7", concepts: ["Data types: str, int, list, dict, set, tuple", "Control flow: if/elif/else, for, while", "Functions, args, kwargs, *args", "Classes & basic OOP", "File I/O & exception handling"] },
+        { name: "Intermediate Python", tag: "Libraries", level: "int", youtube: "https://www.youtube.com/playlist?list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7", concepts: ["List comprehensions & generators", "Decorators & context managers", "Virtual environments (venv, conda)", "requests, boto3, os, pathlib, logging", "asyncio basics for async code"] },
       ]
     }
   },
@@ -173,9 +175,9 @@ const tracks = {
     sub: "Data analysis & visualization",
     sections: {
       "Foundation": [
-        { name: "Data Wrangling", tag: "Analysis", level: "beg", concepts: ["pandas: DataFrames, Series, groupby", "numpy: arrays, broadcasting, vectorization", "Data cleaning: nulls, outliers, dtypes", "Merging, joining, reshaping data", "Reading CSV, JSON, Parquet files"] },
-        { name: "Visualization & Stats", tag: "EDA", level: "beg", concepts: ["matplotlib & seaborn for EDA", "Histograms, box plots, scatter plots", "Descriptive stats: mean, median, std, IQR", "Correlation & basic hypothesis testing", "Plotly for interactive charts"] },
-        { name: "SQL for Data", tag: "Databases", level: "int", concepts: ["SELECT, JOIN (inner/left/right/full)", "GROUP BY, HAVING, subqueries", "Window functions: ROW_NUMBER, RANK, LAG", "CTEs for readable queries", "Connecting Python to SQL (SQLAlchemy, psycopg2)"] },
+        { name: "Data Wrangling", tag: "Analysis", level: "beg", youtube: "https://www.youtube.com/watch?v=2uvysYbKdjM", concepts: ["pandas: DataFrames, Series, groupby", "numpy: arrays, broadcasting, vectorization", "Data cleaning: nulls, outliers, dtypes", "Merging, joining, reshaping data", "Reading CSV, JSON, Parquet files"] },
+        { name: "Visualization & Stats", tag: "EDA", level: "beg", youtube: "https://www.youtube.com/playlist?list=PL-osiE80TeTvipOqomVEeZ1HRrcEvtZB_", concepts: ["matplotlib & seaborn for EDA", "Histograms, box plots, scatter plots", "Descriptive stats: mean, median, std, IQR", "Correlation & basic hypothesis testing", "Plotly for interactive charts"] },
+        { name: "SQL for Data", tag: "Databases", level: "int", youtube: "https://www.youtube.com/playlist?list=PLUaB-1hjhk8GT6N5ne2qpf603sF26m2PW", concepts: ["SELECT, JOIN (inner/left/right/full)", "GROUP BY, HAVING, subqueries", "Window functions: ROW_NUMBER, RANK, LAG", "CTEs for readable queries", "Connecting Python to SQL (SQLAlchemy, psycopg2)"] },
       ]
     }
   },
@@ -183,10 +185,10 @@ const tracks = {
     sub: "ML algorithms & modeling",
     sections: {
       "Core ML": [
-        { name: "ML Fundamentals", tag: "Concepts", level: "beg", concepts: ["Supervised vs unsupervised vs RL", "Train/val/test splits & cross-validation", "Bias-variance tradeoff", "Overfitting & regularization (L1, L2)", "Evaluation: accuracy, precision, recall, F1, AUC-ROC"] },
-        { name: "Classic Algorithms", tag: "Algorithms", level: "beg", concepts: ["Linear & logistic regression", "Decision trees, random forests, XGBoost", "K-means clustering, DBSCAN", "K-nearest neighbors", "Support vector machines (SVM)"] },
-        { name: "Deep Learning", tag: "Neural Networks", level: "int", concepts: ["Neural nets: layers, activations, backprop", "PyTorch or TensorFlow basics", "CNNs for image tasks", "RNNs & LSTMs for sequences", "Transfer learning with pretrained models"] },
-        { name: "Feature Engineering", tag: "Modeling", level: "int", concepts: ["Encoding categoricals (OHE, label)", "Scaling: StandardScaler, MinMaxScaler", "Feature selection: variance, importance, SHAP", "Handling class imbalance (SMOTE, weights)", "Pipeline with sklearn Pipeline API"] },
+        { name: "ML Fundamentals", tag: "Concepts", level: "beg", youtube: "https://www.youtube.com/watch?v=Gv9_4yMHFhI", concepts: ["Supervised vs unsupervised vs RL", "Train/val/test splits & cross-validation", "Bias-variance tradeoff", "Overfitting & regularization (L1, L2)", "Evaluation: accuracy, precision, recall, F1, AUC-ROC"] },
+        { name: "Classic Algorithms", tag: "Algorithms", level: "beg", youtube: "https://www.youtube.com/playlist?list=PLblh5JKOoLUIcdlgu78MnlATeyx4cEVeR", concepts: ["Linear & logistic regression", "Decision trees, random forests, XGBoost", "K-means clustering, DBSCAN", "K-nearest neighbors", "Support vector machines (SVM)"] },
+        { name: "Deep Learning", tag: "Neural Networks", level: "int", youtube: "https://www.youtube.com/playlist?list=PLZZWrBYkx7Otcjr3eCLZDCgfpqnxMY29s", concepts: ["Neural nets: layers, activations, backprop", "PyTorch or TensorFlow basics", "CNNs for image tasks", "RNNs & LSTMs for sequences", "Transfer learning with pretrained models"] },
+        { name: "Feature Engineering", tag: "Modeling", level: "int", youtube: "https://www.youtube.com/watch?v=6WDFfaL9iz4", concepts: ["Encoding categoricals (OHE, label)", "Scaling: StandardScaler, MinMaxScaler", "Feature selection: variance, importance, SHAP", "Handling class imbalance (SMOTE, weights)", "Pipeline with sklearn Pipeline API"] },
       ]
     }
   },
@@ -194,10 +196,10 @@ const tracks = {
     sub: "Production ML systems",
     sections: {
       "ML Lifecycle": [
-        { name: "Experiment Tracking", tag: "Tracking", level: "int", concepts: ["MLflow: runs, experiments, metrics logging", "Weights & Biases (wandb)", "Model registry: stages (staging to prod)", "Artifact versioning & lineage", "DVC for data version control"] },
-        { name: "Model Serving", tag: "Inference", level: "int", concepts: ["REST API with FastAPI + uvicorn", "Batch vs real-time inference", "vLLM / TorchServe / Triton Inference Server", "Canary deployments for models", "SLOs: latency P99, throughput, error rate"] },
-        { name: "ML Pipelines", tag: "Orchestration", level: "int", concepts: ["Kubeflow Pipelines or Apache Airflow", "Feature stores (Feast, Tecton)", "Data validation (Great Expectations)", "Automated retraining triggers", "Model monitoring: drift, data quality"] },
-        { name: "Kubernetes for ML", tag: "Infrastructure", level: "adv", concepts: ["GPU node pools & GPU resource requests", "KEDA autoscaling for inference workloads", "Helm charts for model deployments", "Persistent volumes for model artifacts", "Ray Serve for distributed serving"] },
+        { name: "Experiment Tracking", tag: "Tracking", level: "int", youtube: "https://www.youtube.com/watch?v=RnYa3QsXRAc", concepts: ["MLflow: runs, experiments, metrics logging", "Weights & Biases (wandb)", "Model registry: stages (staging to prod)", "Artifact versioning & lineage", "DVC for data version control"] },
+        { name: "Model Serving", tag: "Inference", level: "int", youtube: "https://www.youtube.com/watch?v=b5F667g1yCk", concepts: ["REST API with FastAPI + uvicorn", "Batch vs real-time inference", "vLLM / TorchServe / Triton Inference Server", "Canary deployments for models", "SLOs: latency P99, throughput, error rate"] },
+        { name: "ML Pipelines", tag: "Orchestration", level: "int", youtube: "https://www.youtube.com/watch?v=K9AnJ9_ZAXE", concepts: ["Kubeflow Pipelines or Apache Airflow", "Feature stores (Feast, Tecton)", "Data validation (Great Expectations)", "Automated retraining triggers", "Model monitoring: drift, data quality"] },
+        { name: "Kubernetes for ML", tag: "Infrastructure", level: "adv", youtube: "https://www.youtube.com/watch?v=X48VuDVv0do", concepts: ["GPU node pools & GPU resource requests", "KEDA autoscaling for inference workloads", "Helm charts for model deployments", "Persistent volumes for model artifacts", "Ray Serve for distributed serving"] },
       ]
     }
   },
@@ -205,10 +207,10 @@ const tracks = {
     sub: "LLMs, agents & AI products",
     sections: {
       "LLM Fundamentals": [
-        { name: "LLM Concepts", tag: "Foundations", level: "beg", concepts: ["Transformer architecture (attention heads)", "Tokenization, context window, temperature", "Prompt engineering: few-shot, CoT, system prompts", "Hallucination, grounding, and factuality", "API usage: OpenAI, Anthropic, Gemini"] },
-        { name: "RAG (Retrieval-Augmented Gen)", tag: "Architecture", level: "int", concepts: ["Embedding models & vector similarity", "Vector DBs: Pinecone, Weaviate, Chroma", "Chunking strategies (fixed, semantic)", "Retrieval + reranking pipeline", "Evaluating RAG: faithfulness, relevance"] },
-        { name: "LLM Fine-tuning", tag: "Customization", level: "adv", concepts: ["When to fine-tune vs prompt engineer", "LoRA & QLoRA: parameter-efficient tuning", "Supervised fine-tuning (SFT) datasets", "RLHF & DPO for alignment", "Unsloth for fast fine-tuning on consumer GPUs"] },
-        { name: "AI Agents & Frameworks", tag: "Agentic AI", level: "adv", concepts: ["Tool use / function calling", "ReAct pattern: reason + act loops", "LangChain, LlamaIndex, AutoGen", "Memory: short-term (context), long-term (vector store)", "Multi-agent coordination & orchestration", "Observability: tracing LLM calls (LangSmith, Arize)"] },
+        { name: "LLM Concepts", tag: "Foundations", level: "beg", youtube: "https://www.youtube.com/watch?v=zjkBMFhNj_g", concepts: ["Transformer architecture (attention heads)", "Tokenization, context window, temperature", "Prompt engineering: few-shot, CoT, system prompts", "Hallucination, grounding, and factuality", "API usage: OpenAI, Anthropic, Gemini"] },
+        { name: "RAG (Retrieval-Augmented Gen)", tag: "Architecture", level: "int", youtube: "https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x", concepts: ["Embedding models & vector similarity", "Vector DBs: Pinecone, Weaviate, Chroma", "Chunking strategies (fixed, semantic)", "Retrieval + reranking pipeline", "Evaluating RAG: faithfulness, relevance"] },
+        { name: "LLM Fine-tuning", tag: "Customization", level: "adv", youtube: "https://www.youtube.com/watch?v=bZcKYiwtw1I", concepts: ["When to fine-tune vs prompt engineer", "LoRA & QLoRA: parameter-efficient tuning", "Supervised fine-tuning (SFT) datasets", "RLHF & DPO for alignment", "Unsloth for fast fine-tuning on consumer GPUs"] },
+        { name: "AI Agents & Frameworks", tag: "Agentic AI", level: "adv", youtube: "https://www.youtube.com/watch?v=DtW_Lc9hYoU", concepts: ["Tool use / function calling", "ReAct pattern: reason + act loops", "LangChain, LlamaIndex, AutoGen", "Memory: short-term (context), long-term (vector store)", "Multi-agent coordination & orchestration", "Observability: tracing LLM calls (LangSmith, Arize)"] },
       ]
     }
   }
@@ -266,6 +268,17 @@ function renderTrack(key) {
         ul.append(li);
       }
       body.append(ul);
+
+      if (card.youtube) {
+        const ytLink = document.createElement('a');
+        ytLink.className = 'yt-link';
+        ytLink.href = card.youtube;
+        ytLink.target = '_blank';
+        ytLink.rel = 'noopener noreferrer';
+        ytLink.textContent = '▶ Watch on YouTube';
+        ytLink.addEventListener('click', e => e.stopPropagation());
+        body.append(ytLink);
+      }
 
       cardEl.append(top, tagEl, body);
       cardEl.addEventListener('click', () => cardEl.classList.toggle('open'));
