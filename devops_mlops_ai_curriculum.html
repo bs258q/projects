@@ -1,0 +1,224 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .wrap { padding: 1rem 0; }
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .nav-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary); font-weight: 400; transition: all .15s;
+  }
+  .nav-btn.active, .nav-btn:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary); border-color: var(--color-border-primary);
+  }
+  .nav-btn.active { font-weight: 500; }
+  .track-header {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 1rem;
+    border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0.75rem;
+  }
+  .track-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .track-sub { font-size: 13px; color: var(--color-text-secondary); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); padding: 14px;
+    cursor: pointer; transition: border-color .15s, background .1s;
+  }
+  .card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .card.open { border-color: var(--color-border-primary); }
+  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot.beg { background: #1D9E75; }
+  .dot.int { background: #BA7517; }
+  .dot.adv { background: #D4537E; }
+  .card-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .card-tag { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .card-body { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; display: none; }
+  .card.open .card-body { display: block; }
+  .concepts { list-style: none; padding: 0; }
+  .concepts li { padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .concepts li:last-child { border-bottom: none; }
+  .concepts li::before { content: "→ "; color: var(--color-text-tertiary); }
+  .legend { display: flex; gap: 16px; margin-bottom: 1rem; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
+  .section-label {
+    font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--color-text-tertiary); margin: 1.25rem 0 0.5rem;
+  }
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">DevOps, MLOps & AI Curriculum Guide — click any topic card to expand learning concepts</h2>
+
+<div class="nav" id="nav"></div>
+
+<div class="legend">
+  <div class="leg"><span class="dot beg"></span>Beginner</div>
+  <div class="leg"><span class="dot int"></span>Intermediate</div>
+  <div class="leg"><span class="dot adv"></span>Advanced</div>
+</div>
+
+<div id="content"></div>
+</div>
+
+<script>
+const tracks = {
+  "AWS Core": {
+    sub: "Cloud infrastructure fundamentals",
+    sections: {
+      "Networking": [
+        { name: "VPC & Subnets", tag: "Networking", level: "beg", concepts: ["What is a VPC (Virtual Private Cloud)", "Public vs private subnets", "CIDR blocks (e.g. 10.0.0.0/16)", "Availability zones & subnet mapping", "Internet Gateway vs NAT Gateway"] },
+        { name: "Route Tables", tag: "Networking", level: "beg", concepts: ["Default vs custom route tables", "Local routes vs internet routes", "Associating route tables with subnets", "Route propagation basics"] },
+        { name: "Security Groups & NACLs", tag: "Security", level: "beg", concepts: ["Stateful SGs vs stateless NACLs", "Inbound & outbound rules", "Port/IP-based allow/deny rules", "NACL rule evaluation order (priority numbers)", "Layering SGs with NACLs for defense-in-depth"] },
+        { name: "Load Balancing (ALB/NLB)", tag: "Networking", level: "int", concepts: ["ALB (L7) vs NLB (L4) differences", "Target groups & health checks", "Listener rules & path-based routing", "SSL termination on ALB", "Sticky sessions & connection draining"] },
+      ],
+      "Compute & Containers": [
+        { name: "ECS (Elastic Container Service)", tag: "Containers", level: "int", concepts: ["Task definitions & containers", "ECS services vs standalone tasks", "Fargate (serverless) vs EC2 launch type", "Service auto-scaling policies", "ECS service discovery"] },
+        { name: "EKS (Elastic Kubernetes Svc)", tag: "Containers", level: "adv", concepts: ["Managed node groups vs self-managed", "Cluster autoscaler & Karpenter", "AWS Load Balancer Controller (ALB ingress)", "EBS CSI & EFS CSI drivers", "IRSA (IAM Roles for Service Accounts)", "CoreDNS, kube-proxy, VPC-CNI plugins"] },
+      ],
+      "Data & Storage": [
+        { name: "S3 & CloudFront", tag: "Storage / CDN", level: "beg", concepts: ["Buckets, objects, and prefixes", "Storage classes (Standard, IA, Glacier)", "Bucket policies vs ACLs", "Static website hosting on S3", "CloudFront distributions & origins", "Cache behaviors & TTL", "OAC (Origin Access Control)"] },
+        { name: "RDS & DynamoDB", tag: "Databases", level: "int", concepts: ["RDS: Multi-AZ vs read replicas", "Parameter groups & snapshots", "DynamoDB: partition key + sort key design", "Provisioned vs on-demand capacity", "DynamoDB Streams & TTL", "Global tables (multi-region)"] },
+      ],
+      "Messaging & DNS": [
+        { name: "SQS & SNS", tag: "Messaging", level: "int", concepts: ["SQS: standard vs FIFO queues", "Message visibility timeout & DLQ", "SNS topics & fan-out pattern", "SNS → SQS subscriptions", "Event-driven architecture basics"] },
+        { name: "Route 53 & ACM", tag: "DNS / TLS", level: "int", concepts: ["DNS record types: A, CNAME, ALIAS", "Routing policies: simple, weighted, latency, failover", "Health checks in Route 53", "ACM: requesting & validating TLS certs", "ACM with ALB & CloudFront"] },
+      ]
+    }
+  },
+  "Docker": {
+    sub: "Container fundamentals",
+    sections: {
+      "Basics": [
+        { name: "Container Concepts", tag: "Fundamentals", level: "beg", concepts: ["Containers vs VMs", "Images, layers & the Union FS", "Docker Hub & image registries (ECR)", "docker build / run / exec / logs", "Volumes vs bind mounts"] },
+        { name: "Dockerfile", tag: "Image Building", level: "beg", concepts: ["FROM, RUN, COPY, CMD, ENTRYPOINT", "Multi-stage builds for smaller images", "Layer caching and build order", ".dockerignore best practices", "ARG vs ENV variables"] },
+        { name: "Networking & Compose", tag: "Networking", level: "int", concepts: ["Bridge, host, overlay networks", "Container-to-container DNS", "docker compose: services, volumes, networks", "Depends_on & healthcheck", "Environment variable management"] },
+      ]
+    }
+  },
+  "Terraform": {
+    sub: "Infrastructure as Code",
+    sections: {
+      "Core IaC": [
+        { name: "Terraform Basics", tag: "IaC", level: "beg", concepts: ["providers, resources, data sources", "terraform init / plan / apply / destroy", "State file & remote backends (S3 + DynamoDB)", "Variables, outputs, locals", "terraform.tfvars vs environment vars"] },
+        { name: "Modules & Advanced", tag: "IaC", level: "int", concepts: ["Writing reusable modules", "Module versioning with Terraform Registry", "count vs for_each loops", "Dynamic blocks", "Workspaces for multi-env management", "Terragrunt for DRY configs"] },
+      ]
+    }
+  },
+  "GitHub Actions": {
+    sub: "CI/CD automation",
+    sections: {
+      "CI/CD": [
+        { name: "Workflows & Triggers", tag: "CI/CD", level: "beg", concepts: ["YAML workflow syntax", "on: push, pull_request, schedule triggers", "Jobs, steps, and runners", "Environment variables & secrets", "Matrix builds (multi OS/version)"] },
+        { name: "Advanced Pipelines", tag: "CI/CD", level: "int", concepts: ["Reusable workflows (workflow_call)", "Composite actions", "Caching dependencies (actions/cache)", "Build & push Docker images to ECR", "Deploying to ECS/EKS from Actions", "OIDC for keyless AWS auth"] },
+      ]
+    }
+  },
+  "Python": {
+    sub: "Programming foundation",
+    sections: {
+      "Language Core": [
+        { name: "Python Fundamentals", tag: "Language", level: "beg", concepts: ["Data types: str, int, list, dict, set, tuple", "Control flow: if/elif/else, for, while", "Functions, args, kwargs, *args", "Classes & basic OOP", "File I/O & exception handling"] },
+        { name: "Intermediate Python", tag: "Libraries", level: "int", concepts: ["List comprehensions & generators", "Decorators & context managers", "Virtual environments (venv, conda)", "requests, boto3, os, pathlib, logging", "asyncio basics for async code"] },
+      ]
+    }
+  },
+  "Data Science": {
+    sub: "Data analysis & visualization",
+    sections: {
+      "Foundation": [
+        { name: "Data Wrangling", tag: "Analysis", level: "beg", concepts: ["pandas: DataFrames, Series, groupby", "numpy: arrays, broadcasting, vectorization", "Data cleaning: nulls, outliers, dtypes", "Merging, joining, reshaping data", "Reading CSV, JSON, Parquet files"] },
+        { name: "Visualization & Stats", tag: "EDA", level: "beg", concepts: ["matplotlib & seaborn for EDA", "Histograms, box plots, scatter plots", "Descriptive stats: mean, median, std, IQR", "Correlation & basic hypothesis testing", "Plotly for interactive charts"] },
+        { name: "SQL for Data", tag: "Databases", level: "int", concepts: ["SELECT, JOIN (inner/left/right/full)", "GROUP BY, HAVING, subqueries", "Window functions: ROW_NUMBER, RANK, LAG", "CTEs for readable queries", "Connecting Python to SQL (SQLAlchemy, psycopg2)"] },
+      ]
+    }
+  },
+  "Machine Learning": {
+    sub: "ML algorithms & modeling",
+    sections: {
+      "Core ML": [
+        { name: "ML Fundamentals", tag: "Concepts", level: "beg", concepts: ["Supervised vs unsupervised vs RL", "Train/val/test splits & cross-validation", "Bias-variance tradeoff", "Overfitting & regularization (L1, L2)", "Evaluation: accuracy, precision, recall, F1, AUC-ROC"] },
+        { name: "Classic Algorithms", tag: "Algorithms", level: "beg", concepts: ["Linear & logistic regression", "Decision trees, random forests, XGBoost", "K-means clustering, DBSCAN", "K-nearest neighbors", "Support vector machines (SVM)"] },
+        { name: "Deep Learning", tag: "Neural Networks", level: "int", concepts: ["Neural nets: layers, activations, backprop", "PyTorch or TensorFlow basics", "CNNs for image tasks", "RNNs & LSTMs for sequences", "Transfer learning with pretrained models"] },
+        { name: "Feature Engineering", tag: "Modeling", level: "int", concepts: ["Encoding categoricals (OHE, label)", "Scaling: StandardScaler, MinMaxScaler", "Feature selection: variance, importance, SHAP", "Handling class imbalance (SMOTE, weights)", "Pipeline with sklearn Pipeline API"] },
+      ]
+    }
+  },
+  "MLOps": {
+    sub: "Production ML systems",
+    sections: {
+      "ML Lifecycle": [
+        { name: "Experiment Tracking", tag: "Tracking", level: "int", concepts: ["MLflow: runs, experiments, metrics logging", "Weights & Biases (wandb)", "Model registry: stages (staging → prod)", "Artifact versioning & lineage", "DVC for data version control"] },
+        { name: "Model Serving", tag: "Inference", level: "int", concepts: ["REST API with FastAPI + uvicorn", "Batch vs real-time inference", "vLLM / TorchServe / Triton Inference Server", "Canary deployments for models", "SLOs: latency P99, throughput, error rate"] },
+        { name: "ML Pipelines", tag: "Orchestration", level: "int", concepts: ["Kubeflow Pipelines or Apache Airflow", "Feature stores (Feast, Tecton)", "Data validation (Great Expectations)", "Automated retraining triggers", "Model monitoring: drift, data quality"] },
+        { name: "Kubernetes for ML", tag: "Infrastructure", level: "adv", concepts: ["GPU node pools & GPU resource requests", "KEDA autoscaling for inference workloads", "Helm charts for model deployments", "Persistent volumes for model artifacts", "Ray Serve for distributed serving"] },
+      ]
+    }
+  },
+  "AI Engineer": {
+    sub: "LLMs, agents & AI products",
+    sections: {
+      "LLM Fundamentals": [
+        { name: "LLM Concepts", tag: "Foundations", level: "beg", concepts: ["Transformer architecture (attention heads)", "Tokenization, context window, temperature", "Prompt engineering: few-shot, CoT, system prompts", "Hallucination, grounding, and factuality", "API usage: OpenAI, Anthropic, Gemini"] },
+        { name: "RAG (Retrieval-Augmented Gen)", tag: "Architecture", level: "int", concepts: ["Embedding models & vector similarity", "Vector DBs: Pinecone, Weaviate, Chroma", "Chunking strategies (fixed, semantic)", "Retrieval + reranking pipeline", "Evaluating RAG: faithfulness, relevance"] },
+        { name: "LLM Fine-tuning", tag: "Customization", level: "adv", concepts: ["When to fine-tune vs prompt engineer", "LoRA & QLoRA: parameter-efficient tuning", "Supervised fine-tuning (SFT) datasets", "RLHF & DPO for alignment", "Unsloth for fast fine-tuning on consumer GPUs"] },
+        { name: "AI Agents & Frameworks", tag: "Agentic AI", level: "adv", concepts: ["Tool use / function calling", "ReAct pattern: reason + act loops", "LangChain, LlamaIndex, AutoGen", "Memory: short-term (context), long-term (vector store)", "Multi-agent coordination & orchestration", "Observability: tracing LLM calls (LangSmith, Arize)"] },
+      ]
+    }
+  }
+};
+
+const nav = document.getElementById('nav');
+const content = document.getElementById('content');
+let currentTrack = Object.keys(tracks)[0];
+
+function render(trackKey) {
+  currentTrack = trackKey;
+  nav.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === trackKey);
+  });
+
+  const track = tracks[trackKey];
+  let html = `<div class="track-header"><span class="track-title">${trackKey}</span><span class="track-sub">${track.sub}</span></div>`;
+
+  for (const [section, cards] of Object.entries(track.sections)) {
+    if (Object.keys(track.sections).length > 1) {
+      html += `<div class="section-label">${section}</div>`;
+    }
+    html += `<div class="grid">`;
+    cards.forEach((card, i) => {
+      html += `<div class="card" data-idx="${i}" data-sec="${section}">
+        <div class="card-top">
+          <span class="dot ${card.level}"></span>
+          <span class="card-name">${card.name}</span>
+        </div>
+        <div class="card-tag">${card.tag}</div>
+        <div class="card-body">
+          <ul class="concepts">${card.concepts.map(c => `<li>${c}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  content.innerHTML = html;
+  content.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('open'));
+  });
+}
+
+Object.keys(tracks).forEach(key => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.dataset.t = key;
+  btn.textContent = key;
+  btn.onclick = () => render(key);
+  nav.appendChild(btn);
+});
+
+render(currentTrack);
+</script>
