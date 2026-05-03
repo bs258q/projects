@@ -1,69 +1,111 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curriculum — DevPath</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
-  .wrap { padding: 1rem 0; }
-  .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-  .nav-btn {
-    padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
-    border: 0.5px solid var(--color-border-secondary);
-    background: var(--color-background-primary);
-    color: var(--color-text-secondary); font-weight: 400; transition: all .15s;
-  }
-  .nav-btn.active, .nav-btn:hover {
-    background: var(--color-background-secondary);
-    color: var(--color-text-primary); border-color: var(--color-border-primary);
-  }
-  .nav-btn.active { font-weight: 500; }
-  .track-header {
-    display: flex; align-items: baseline; gap: 12px; margin-bottom: 1rem;
-    border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0.75rem;
-  }
-  .track-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
-  .track-sub { font-size: 13px; color: var(--color-text-secondary); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg); padding: 14px;
-    cursor: pointer; transition: border-color .15s, background .1s;
-  }
-  .card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
-  .card.open { border-color: var(--color-border-primary); }
-  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .dot.beg { background: #1D9E75; }
-  .dot.int { background: #BA7517; }
-  .dot.adv { background: #D4537E; }
-  .card-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
-  .card-tag { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
-  .card-body { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; display: none; }
-  .card.open .card-body { display: block; }
-  .concepts { list-style: none; padding: 0; }
-  .concepts li { padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
-  .concepts li:last-child { border-bottom: none; }
-  .concepts li::before { content: "→ "; color: var(--color-text-tertiary); }
-  .legend { display: flex; gap: 16px; margin-bottom: 1rem; }
-  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
-  .section-label {
-    font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em;
-    color: var(--color-text-tertiary); margin: 1.25rem 0 0.5rem;
-  }
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg: #0a0a0a;
+  --surface: #111;
+  --surface-2: #161616;
+  --border: #222;
+  --border-2: #2e2e2e;
+  --text: #ededed;
+  --text-2: #888;
+  --text-3: #555;
+  --green: #1D9E75;
+  --border-primary: #3a3a3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+
+.site-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 56px; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,.92); backdrop-filter: blur(12px); z-index: 100; }
+.nav-logo { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.nav-logo span { color: var(--green); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--text-2); transition: all .15s; }
+.nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-2); }
+.nav-link.active { font-weight: 500; }
+
+.page-header { padding: 2.5rem 2rem 1.5rem; border-bottom: 0.5px solid var(--border); max-width: 960px; margin: 0 auto; }
+.page-header h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+.page-header p { font-size: 14px; color: var(--text-2); }
+
+.content-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+
+/* track nav */
+.track-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.track-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid var(--border-2); background: var(--surface); color: var(--text-2); font-weight: 400; transition: all .15s; }
+.track-btn:hover, .track-btn.active { background: var(--surface-2); color: var(--text); border-color: var(--border-primary); }
+.track-btn.active { font-weight: 500; }
+
+/* legend */
+.legend { display: flex; gap: 16px; margin-bottom: 1rem; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-2); }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* track header */
+.track-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--border); padding-bottom: 0.75rem; }
+.track-title { font-size: 18px; font-weight: 500; }
+.track-sub { font-size: 13px; color: var(--text-2); }
+
+/* section label */
+.section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); margin: 1.25rem 0 0.5rem; }
+
+/* grid */
+.c-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+
+/* cards */
+.card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color .15s, background .1s; }
+.card:hover { border-color: var(--border-2); background: var(--surface-2); }
+.card.open { border-color: var(--border-primary); }
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.card-dot.beg { background: #1D9E75; }
+.card-dot.int { background: #BA7517; }
+.card-dot.adv { background: #D4537E; }
+.card-name { font-size: 14px; font-weight: 500; }
+.card-tag { font-size: 11px; color: var(--text-2); margin-bottom: 8px; }
+.card-body { font-size: 12.5px; color: var(--text-2); line-height: 1.6; display: none; }
+.card.open .card-body { display: block; }
+.concepts { list-style: none; padding: 0; }
+.concepts li { padding: 3px 0; border-bottom: 0.5px solid var(--border); }
+.concepts li:last-child { border-bottom: none; }
+.concepts li::before { content: "→ "; color: var(--text-3); }
+
+footer { border-top: 0.5px solid var(--border); padding: 1.5rem 2rem; text-align: center; font-size: 12.5px; color: var(--text-3); }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-<h2 class="sr-only">DevOps, MLOps & AI Curriculum Guide — click any topic card to expand learning concepts</h2>
+<nav class="site-nav">
+  <a class="nav-logo" href="/"><span>Dev</span>Path</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link active" href="/curriculum">Curriculum</a>
+    <a class="nav-link" href="/projects">Projects</a>
+  </div>
+</nav>
 
-<div class="nav" id="nav"></div>
-
-<div class="legend">
-  <div class="leg"><span class="dot beg"></span>Beginner</div>
-  <div class="leg"><span class="dot int"></span>Intermediate</div>
-  <div class="leg"><span class="dot adv"></span>Advanced</div>
+<div class="page-header">
+  <h1>Curriculum</h1>
+  <p>Concept cards for every track — click any card to expand the key topics you need to know</p>
 </div>
 
-<div id="content"></div>
+<div class="content-wrap">
+  <div class="track-nav" id="trackNav"></div>
+  <div class="legend">
+    <div class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Beginner</div>
+    <div class="leg"><span class="leg-dot" style="background:#BA7517"></span>Intermediate</div>
+    <div class="leg"><span class="leg-dot" style="background:#D4537E"></span>Advanced</div>
+  </div>
+  <div id="trackContent"></div>
 </div>
+
+<footer>DevPath &mdash; DevOps, MLOps &amp; AI Engineering learning platform</footer>
 
 <script>
 const tracks = {
@@ -85,7 +127,7 @@ const tracks = {
         { name: "RDS & DynamoDB", tag: "Databases", level: "int", concepts: ["RDS: Multi-AZ vs read replicas", "Parameter groups & snapshots", "DynamoDB: partition key + sort key design", "Provisioned vs on-demand capacity", "DynamoDB Streams & TTL", "Global tables (multi-region)"] },
       ],
       "Messaging & DNS": [
-        { name: "SQS & SNS", tag: "Messaging", level: "int", concepts: ["SQS: standard vs FIFO queues", "Message visibility timeout & DLQ", "SNS topics & fan-out pattern", "SNS → SQS subscriptions", "Event-driven architecture basics"] },
+        { name: "SQS & SNS", tag: "Messaging", level: "int", concepts: ["SQS: standard vs FIFO queues", "Message visibility timeout & DLQ", "SNS topics & fan-out pattern", "SNS to SQS subscriptions", "Event-driven architecture basics"] },
         { name: "Route 53 & ACM", tag: "DNS / TLS", level: "int", concepts: ["DNS record types: A, CNAME, ALIAS", "Routing policies: simple, weighted, latency, failover", "Health checks in Route 53", "ACM: requesting & validating TLS certs", "ACM with ALB & CloudFront"] },
       ]
     }
@@ -152,7 +194,7 @@ const tracks = {
     sub: "Production ML systems",
     sections: {
       "ML Lifecycle": [
-        { name: "Experiment Tracking", tag: "Tracking", level: "int", concepts: ["MLflow: runs, experiments, metrics logging", "Weights & Biases (wandb)", "Model registry: stages (staging → prod)", "Artifact versioning & lineage", "DVC for data version control"] },
+        { name: "Experiment Tracking", tag: "Tracking", level: "int", concepts: ["MLflow: runs, experiments, metrics logging", "Weights & Biases (wandb)", "Model registry: stages (staging to prod)", "Artifact versioning & lineage", "DVC for data version control"] },
         { name: "Model Serving", tag: "Inference", level: "int", concepts: ["REST API with FastAPI + uvicorn", "Batch vs real-time inference", "vLLM / TorchServe / Triton Inference Server", "Canary deployments for models", "SLOs: latency P99, throughput, error rate"] },
         { name: "ML Pipelines", tag: "Orchestration", level: "int", concepts: ["Kubeflow Pipelines or Apache Airflow", "Feature stores (Feast, Tecton)", "Data validation (Great Expectations)", "Automated retraining triggers", "Model monitoring: drift, data quality"] },
         { name: "Kubernetes for ML", tag: "Infrastructure", level: "adv", concepts: ["GPU node pools & GPU resource requests", "KEDA autoscaling for inference workloads", "Helm charts for model deployments", "Persistent volumes for model artifacts", "Ray Serve for distributed serving"] },
@@ -172,53 +214,79 @@ const tracks = {
   }
 };
 
-const nav = document.getElementById('nav');
-const content = document.getElementById('content');
-let currentTrack = Object.keys(tracks)[0];
+const trackNav = document.getElementById('trackNav');
+const trackContent = document.getElementById('trackContent');
 
-function render(trackKey) {
-  currentTrack = trackKey;
-  nav.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.t === trackKey);
-  });
-
-  const track = tracks[trackKey];
-  let html = `<div class="track-header"><span class="track-title">${trackKey}</span><span class="track-sub">${track.sub}</span></div>`;
-
-  for (const [section, cards] of Object.entries(track.sections)) {
-    if (Object.keys(track.sections).length > 1) {
-      html += `<div class="section-label">${section}</div>`;
-    }
-    html += `<div class="grid">`;
-    cards.forEach((card, i) => {
-      html += `<div class="card" data-idx="${i}" data-sec="${section}">
-        <div class="card-top">
-          <span class="dot ${card.level}"></span>
-          <span class="card-name">${card.name}</span>
-        </div>
-        <div class="card-tag">${card.tag}</div>
-        <div class="card-body">
-          <ul class="concepts">${card.concepts.map(c => `<li>${c}</li>`).join('')}</ul>
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  content.innerHTML = html;
-  content.querySelectorAll('.card').forEach(el => {
-    el.addEventListener('click', () => el.classList.toggle('open'));
-  });
+function el(tag, className) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  return e;
 }
 
-Object.keys(tracks).forEach(key => {
-  const btn = document.createElement('button');
-  btn.className = 'nav-btn';
+function renderTrack(key) {
+  trackNav.querySelectorAll('.track-btn').forEach(b => b.classList.toggle('active', b.dataset.t === key));
+
+  const track = tracks[key];
+  const frag = document.createDocumentFragment();
+
+  const header = el('div', 'track-header');
+  const titleEl = el('span', 'track-title');
+  titleEl.textContent = key;
+  const subEl = el('span', 'track-sub');
+  subEl.textContent = track.sub;
+  header.append(titleEl, subEl);
+  frag.append(header);
+
+  const sectionKeys = Object.keys(track.sections);
+  for (const sectionName of sectionKeys) {
+    if (sectionKeys.length > 1) {
+      const label = el('div', 'section-label');
+      label.textContent = sectionName;
+      frag.append(label);
+    }
+
+    const grid = el('div', 'c-grid');
+    for (const card of track.sections[sectionName]) {
+      const cardEl = el('div', 'card');
+
+      const top = el('div', 'card-top');
+      const dot = el('span', `card-dot ${card.level}`);
+      const nameEl = el('span', 'card-name');
+      nameEl.textContent = card.name;
+      top.append(dot, nameEl);
+
+      const tagEl = el('div', 'card-tag');
+      tagEl.textContent = card.tag;
+
+      const body = el('div', 'card-body');
+      const ul = el('ul', 'concepts');
+      for (const concept of card.concepts) {
+        const li = document.createElement('li');
+        li.textContent = concept;
+        ul.append(li);
+      }
+      body.append(ul);
+
+      cardEl.append(top, tagEl, body);
+      cardEl.addEventListener('click', () => cardEl.classList.toggle('open'));
+      grid.append(cardEl);
+    }
+    frag.append(grid);
+  }
+
+  trackContent.replaceChildren(frag);
+}
+
+for (const key of Object.keys(tracks)) {
+  const btn = el('button', 'track-btn');
   btn.dataset.t = key;
   btn.textContent = key;
-  btn.onclick = () => render(key);
-  nav.appendChild(btn);
-});
+  btn.addEventListener('click', () => renderTrack(key));
+  trackNav.append(btn);
+}
 
-render(currentTrack);
+renderTrack(Object.keys(tracks)[0]);
 </script>
+
+</body>
+</html>

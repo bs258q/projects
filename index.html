@@ -1,374 +1,193 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps, MLOps & AI Engineering</title>
 <style>
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg: #0a0a0a;
+  --surface: #111;
+  --surface-2: #161616;
+  --border: #222;
+  --border-2: #2e2e2e;
+  --text: #ededed;
+  --text-2: #888;
+  --text-3: #555;
+  --green: #1D9E75;
+  --amber: #BA7517;
+  --pink: #D4537E;
+  --green-bg: #0d2e24;
+  --amber-bg: #2a1c06;
+  --pink-bg: #2a0e1a;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-.wrap { padding: 1rem 0; font-family: var(--font-sans); }
-.nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
-.nb {
-  padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
-  border: 0.5px solid var(--color-border-secondary);
-  background: var(--color-background-primary);
-  color: var(--color-text-secondary); transition: all .15s;
-}
-.nb.active, .nb:hover {
-  background: var(--color-background-secondary);
-  color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500;
-}
-.legend { display: flex; gap: 16px; margin-bottom: 1rem; }
-.leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
-.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 400; }
-.b1 { background: #E1F5EE; color: #0F6E56; }
-.b2 { background: #FAEEDA; color: #854F0B; }
-.b3 { background: #FBEAF0; color: #993556; }
-.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.d1 { background: #1D9E75; }
-.d2 { background: #BA7517; }
-.d3 { background: #D4537E; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-.card {
-  background: var(--color-background-primary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-lg); padding: 14px;
-  cursor: pointer; transition: border-color .15s;
-}
-.card:hover { border-color: var(--color-border-secondary); }
-.card.open { border-color: var(--color-border-primary); }
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-.card-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; padding-right: 8px; line-height: 1.4; }
-.card-emoji { font-size: 16px; flex-shrink: 0; }
-.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-.tag { font-size: 11px; padding: 2px 7px; border-radius: 8px; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
-.card-body { display: none; margin-top: 10px; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 10px; }
-.card.open .card-body { display: block; }
-.section-row { margin-bottom: 6px; }
-.section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-tertiary); margin-bottom: 4px; }
-.section-text { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; }
-.step-list { list-style: none; padding: 0; }
-.step-list li { font-size: 12.5px; color: var(--color-text-secondary); padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); line-height: 1.5; }
-.step-list li:last-child { border-bottom: none; }
-.step-list li::before { content: "→ "; color: var(--color-text-tertiary); }
-.track-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0.75rem; }
-.track-title { font-size: 18px; font-weight: 500; }
-.track-sub { font-size: 13px; color: var(--color-text-secondary); }
-.sec-divider { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-tertiary); margin: 1.25rem 0 0.5rem; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+
+/* Nav */
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 56px; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,.92); backdrop-filter: blur(12px); z-index: 100; }
+.nav-logo { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.nav-logo span { color: var(--green); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--text-2); transition: all .15s; }
+.nav-link:hover { color: var(--text); background: var(--surface-2); }
+.nav-link.active { color: var(--text); background: var(--surface-2); font-weight: 500; }
+
+/* Hero */
+.hero { max-width: 860px; margin: 0 auto; padding: 5rem 2rem 3.5rem; text-align: center; }
+.hero-label { display: inline-block; font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--green); background: var(--green-bg); border: 0.5px solid rgba(29,158,117,.25); padding: 4px 12px; border-radius: 20px; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
+.hero h1 em { font-style: normal; color: var(--green); }
+.hero p { font-size: 17px; color: var(--text-2); max-width: 560px; margin: 0 auto 2.25rem; }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all .15s; cursor: pointer; border: none; }
+.btn-primary { background: var(--green); color: #fff; }
+.btn-primary:hover { background: #18896a; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 0.5px solid var(--border-2); }
+.btn-secondary:hover { background: var(--surface-2); border-color: #3a3a3a; }
+.btn-arrow { font-size: 16px; }
+
+/* Stats */
+.stats { display: flex; gap: 0; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
+.stat { flex: 1; padding: 1.25rem 2rem; text-align: center; border-right: 0.5px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-num { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.stat-label { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+
+/* Tracks */
+.section { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem; }
+.section-head { margin-bottom: 1.75rem; }
+.section-head h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+.section-head p { font-size: 14px; color: var(--text-2); }
+.tracks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.track-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 16px; transition: border-color .15s; }
+.track-card:hover { border-color: var(--border-2); }
+.track-emoji { font-size: 22px; margin-bottom: 10px; }
+.track-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.track-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+
+/* Feature split */
+.features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .features { grid-template-columns: 1fr; } .stats { flex-wrap: wrap; } .stat { flex: 1 1 50%; } }
+.feature-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+.feature-icon { font-size: 28px; }
+.feature-card h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.feature-card p { font-size: 13.5px; color: var(--text-2); line-height: 1.65; flex: 1; }
+.feature-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--green); }
+.feature-link:hover { color: #18a87c; }
+
+/* Levels */
+.levels { display: flex; flex-direction: column; gap: 10px; }
+.level-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; }
+.level-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.level-name { font-size: 14px; font-weight: 500; min-width: 100px; }
+.level-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+/* Divider */
+.divider { border: none; border-top: 0.5px solid var(--border); }
+
+/* Footer */
+footer { border-top: 0.5px solid var(--border); padding: 1.5rem 2rem; text-align: center; font-size: 12.5px; color: var(--text-3); }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-<h2 class="sr-only">Hands-on beginner projects by DevOps, MLOps, and AI track</h2>
-<div class="nav" id="nav"></div>
-<div class="legend">
-  <div class="leg"><span class="dot d1"></span>Beginner</div>
-  <div class="leg"><span class="dot d2"></span>Intermediate</div>
-  <div class="leg"><span class="dot d3"></span>Capstone</div>
+<nav class="nav">
+  <a class="nav-logo" href="/">Dev<span>Path</span></a>
+  <div class="nav-links">
+    <a class="nav-link active" href="/">Home</a>
+    <a class="nav-link" href="/curriculum">Curriculum</a>
+    <a class="nav-link" href="/projects">Projects</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Learning Platform</div>
+  <h1>Master <em>DevOps</em>, MLOps<br>&amp; AI Engineering</h1>
+  <p>9 structured tracks from fundamentals to production. Curriculum that maps what to learn — projects that prove you can build it.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="/curriculum">Explore Curriculum <span class="btn-arrow">→</span></a>
+    <a class="btn btn-secondary" href="/projects">Browse Projects <span class="btn-arrow">→</span></a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Learning tracks</div></div>
+  <div class="stat"><div class="stat-num">27+</div><div class="stat-label">Hands-on projects</div></div>
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Difficulty levels</div></div>
+  <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Concepts covered</div></div>
 </div>
-<div id="content"></div>
+
+<div class="section">
+  <div class="section-head">
+    <h2>All tracks</h2>
+    <p>From infrastructure fundamentals to production AI systems</p>
+  </div>
+  <div class="tracks-grid">
+    <div class="track-card"><div class="track-emoji">🐳</div><div class="track-name">Docker</div><div class="track-desc">Build &amp; ship containers</div></div>
+    <div class="track-card"><div class="track-emoji">🏗️</div><div class="track-name">Terraform</div><div class="track-desc">Provision real infrastructure</div></div>
+    <div class="track-card"><div class="track-emoji">⚙️</div><div class="track-name">GitHub Actions</div><div class="track-desc">Automate everything</div></div>
+    <div class="track-card"><div class="track-emoji">☁️</div><div class="track-name">AWS Networking</div><div class="track-desc">VPCs, routing &amp; security</div></div>
+    <div class="track-card"><div class="track-emoji">🐍</div><div class="track-name">Python</div><div class="track-desc">Build real scripts &amp; APIs</div></div>
+    <div class="track-card"><div class="track-emoji">📊</div><div class="track-name">Data Science</div><div class="track-desc">Explore &amp; analyse data</div></div>
+    <div class="track-card"><div class="track-emoji">🤖</div><div class="track-name">Machine Learning</div><div class="track-desc">Train, evaluate, iterate</div></div>
+    <div class="track-card"><div class="track-emoji">🔄</div><div class="track-name">MLOps</div><div class="track-desc">Production-grade ML systems</div></div>
+    <div class="track-card"><div class="track-emoji">✨</div><div class="track-name">AI Engineer</div><div class="track-desc">LLMs, RAG &amp; agents</div></div>
+  </div>
 </div>
 
-<script>
-const tracks = {
-  "Docker": {
-    sub: "Build & ship containers",
-    projects: [
-      {
-        name: "Containerize a Python Flask App",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["Python", "Flask", "Docker"],
-        what: "Wrap a simple 'Hello World' REST API in a Docker image and run it locally.",
-        steps: ["Write a 3-route Flask app (GET /, /health, /echo)", "Write a Dockerfile with multi-stage build", "Build image and run with docker run -p 5000:5000", "Push image to Docker Hub or AWS ECR"],
-        learns: "Dockerfile syntax, image layers, port mapping, container lifecycle"
-      },
-      {
-        name: "Multi-service App with Compose",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["Docker Compose", "Flask", "Redis", "Nginx"],
-        what: "A to-do API backed by Redis, with Nginx as a reverse proxy — all wired with docker compose.",
-        steps: ["Flask app stores tasks in Redis (redis-py)", "docker-compose.yml: 3 services (app, redis, nginx)", "nginx.conf proxies /api → Flask container", "Add healthcheck: and depends_on: with condition"],
-        learns: "Service networking, named volumes, compose overrides, healthchecks"
-      },
-      {
-        name: "CI pipeline that builds & scans Docker images",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["GitHub Actions", "Docker", "Trivy", "ECR"],
-        what: "On every PR: build the Docker image, scan it for CVEs, push to ECR only if clean.",
-        steps: ["Write GitHub Actions workflow triggered on pull_request", "Use docker/build-push-action to build image", "Run Trivy vulnerability scanner as a step", "Push to ECR using OIDC (no static keys)", "Fail the workflow if critical CVEs found"],
-        learns: "Container security scanning, OIDC auth, conditional steps, ECR lifecycle"
-      }
-    ]
-  },
-  "Terraform": {
-    sub: "Provision real infrastructure",
-    projects: [
-      {
-        name: "Static Website on S3 + CloudFront",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["Terraform", "AWS S3", "CloudFront", "ACM"],
-        what: "Provision an S3 bucket with static hosting + CloudFront CDN + HTTPS cert — all in Terraform.",
-        steps: ["main.tf: aws_s3_bucket with website config", "ACM certificate with DNS validation in Route 53", "CloudFront distribution pointing to S3 origin", "Output the CloudFront URL", "terraform destroy to clean up"],
-        learns: "Providers, resource dependencies, outputs, remote state on S3"
-      },
-      {
-        name: "VPC + EC2 + RDS in 3-tier architecture",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["Terraform", "VPC", "EC2", "RDS", "SGs"],
-        what: "A classic 3-tier network: public subnet (EC2 web), private subnet (RDS), proper security groups.",
-        steps: ["VPC with 2 public + 2 private subnets across AZs", "Bastion EC2 in public subnet", "RDS Postgres in private subnet with SG only allowing EC2 SG", "ALB in front of EC2 with HTTPS listener", "Wrap everything in a reusable Terraform module"],
-        learns: "Modules, depends_on, data sources, remote state, SG referencing"
-      },
-      {
-        name: "EKS Cluster from scratch",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["Terraform", "EKS", "Karpenter", "IRSA", "Helm"],
-        what: "Full EKS cluster with managed node groups, Karpenter autoscaler, and IRSA for pod-level AWS access.",
-        steps: ["Use terraform-aws-modules/eks module", "Add Karpenter NodePool + EC2NodeClass", "Configure IRSA for a sample workload reading S3", "Install AWS Load Balancer Controller via Helm provider", "Deploy a test app and verify pod autoscaling"],
-        learns: "EKS internals, OIDC trust, Karpenter provisioner config, Helm in Terraform"
-      }
-    ]
-  },
-  "GitHub Actions": {
-    sub: "Automate everything",
-    projects: [
-      {
-        name: "Lint + Test on every PR",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["GitHub Actions", "Python", "pytest", "flake8"],
-        what: "Auto-run linting and unit tests on every pull request to your Python repo.",
-        steps: ["Create .github/workflows/ci.yml", "Trigger on: pull_request to main", "Steps: checkout → setup-python → pip install → flake8 → pytest", "Add a status badge to your README", "Add matrix: to test Python 3.10 and 3.11"],
-        learns: "Workflow YAML, runners, matrix builds, PR status checks"
-      },
-      {
-        name: "Deploy to ECS on merge to main",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["GitHub Actions", "Docker", "ECR", "ECS Fargate"],
-        what: "On merge to main: build Docker image → push to ECR → update ECS service with new image.",
-        steps: ["Configure OIDC role trust for the repo in AWS IAM", "Build and push image to ECR in workflow", "Use aws ecs update-service --force-new-deployment", "Add a Slack notification step on failure", "Gate deploy behind a required reviewer approval"],
-        learns: "OIDC keyless auth, secrets management, ECS deploy, environment protection rules"
-      },
-      {
-        name: "Terraform plan/apply pipeline",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["GitHub Actions", "Terraform", "S3 backend", "Atlantis pattern"],
-        what: "PR triggers terraform plan (posted as comment), merge triggers terraform apply — Atlantis-style.",
-        steps: ["terraform plan on pull_request, capture output", "Post plan output as PR comment via gh CLI", "terraform apply only on push to main after approval", "Store state in S3 with DynamoDB lock", "Add drift detection: scheduled plan on existing infra"],
-        learns: "GitOps IaC workflow, plan output artifacts, DynamoDB locking, scheduled workflows"
-      }
-    ]
-  },
-  "AWS Networking": {
-    sub: "VPCs, routing & security",
-    projects: [
-      {
-        name: "Secure VPC with public/private subnets",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["AWS Console", "VPC", "Subnets", "IGW", "NAT"],
-        what: "Manually build a VPC with 1 public and 1 private subnet, then verify routing from a bastion host.",
-        steps: ["Create VPC (10.0.0.0/16), public subnet (10.0.1.0/24), private subnet (10.0.2.0/24)", "Attach Internet Gateway, update public route table", "Create NAT Gateway in public subnet, update private route table", "Launch EC2 in each subnet, SSH to bastion, hop to private EC2", "Verify private EC2 can reach internet (via NAT) but is not reachable directly"],
-        learns: "CIDR, route table evaluation, NAT vs IGW, security group rules"
-      },
-      {
-        name: "ALB + HTTPS with ACM cert",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["ALB", "ACM", "Route 53", "EC2 target group"],
-        what: "Set up an Application Load Balancer with an HTTPS listener and a real TLS certificate.",
-        steps: ["Request ACM cert for your domain, validate via Route 53 DNS", "Create ALB in public subnets with HTTP (80) → HTTPS redirect", "Create target group with 2 EC2 instances running a simple web server", "HTTPS listener (443) with ACM cert, forward to target group", "Test health checks and simulate one instance failure"],
-        learns: "ACM DNS validation, listener rules, target group health checks, SSL offloading"
-      },
-      {
-        name: "Multi-tier app with SQS decoupling",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["ALB", "ECS Fargate", "SQS", "RDS", "CloudFront"],
-        what: "Web frontend → SQS queue → async worker → RDS. Full decoupled architecture behind CloudFront.",
-        steps: ["Frontend ECS service sends jobs to SQS FIFO queue", "Worker ECS service polls SQS, writes results to RDS", "CloudFront → ALB → ECS; S3 for static assets", "SQS DLQ for failed messages + CloudWatch alarm", "IAM task roles (no hard-coded AWS keys anywhere)"],
-        learns: "Async decoupling, ECS task IAM roles, FIFO vs standard queues, DLQ patterns"
-      }
-    ]
-  },
-  "Python": {
-    sub: "Build real scripts & APIs",
-    projects: [
-      {
-        name: "AWS Resource Cost Reporter",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["Python", "boto3", "pandas"],
-        what: "Script that pulls AWS Cost Explorer data and prints a cost-by-service table.",
-        steps: ["Use boto3 ce.get_cost_and_usage() for last 30 days", "Parse JSON response into a pandas DataFrame", "Sort by cost descending, print top 10 services", "Export to CSV and add a basic bar chart with matplotlib", "Schedule as a Lambda or cron job"],
-        learns: "boto3, JSON parsing, pandas, environment-based AWS credential management"
-      },
-      {
-        name: "REST API with FastAPI + Postgres",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["FastAPI", "SQLAlchemy", "Postgres", "Docker"],
-        what: "A full CRUD API for a 'books' resource, containerized and connected to a Postgres DB.",
-        steps: ["FastAPI app with GET/POST/PUT/DELETE /books endpoints", "SQLAlchemy ORM models + Alembic migrations", "Pydantic schemas for request/response validation", "Docker Compose: api + postgres services", "Add /health endpoint and basic error handling with HTTPException"],
-        learns: "FastAPI routing, Pydantic v2, async SQLAlchemy, database migrations"
-      },
-      {
-        name: "Async job queue with Redis & Celery",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["FastAPI", "Celery", "Redis", "Flower", "Docker"],
-        what: "API accepts long-running jobs (image resize, report generation), returns a job ID, processes async.",
-        steps: ["FastAPI POST /jobs returns job_id immediately", "Celery worker picks up task from Redis broker", "GET /jobs/{id} polls task state (PENDING → SUCCESS/FAILURE)", "Add Flower dashboard to monitor workers", "Deploy as 3 containers: api, worker, redis"],
-        learns: "Task queues, async job patterns, Celery result backend, worker scaling"
-      }
-    ]
-  },
-  "Data Science": {
-    sub: "Explore & analyse data",
-    projects: [
-      {
-        name: "EDA on a real public dataset",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["pandas", "seaborn", "Jupyter"],
-        what: "Download a Kaggle dataset (e.g. Titanic, Airbnb, Netflix), answer 5 business questions with charts.",
-        steps: ["Load CSV with pandas, check dtypes and nulls", "Write 5 questions: e.g. 'Which cities have highest avg price?'", "Answer each with a groupby + seaborn chart", "Handle missing values — drop vs fill with median/mode", "Write a 1-page summary of findings in Markdown"],
-        learns: "EDA workflow, groupby, value_counts, matplotlib subplots, storytelling with data"
-      },
-      {
-        name: "Sales Dashboard with Plotly + Streamlit",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["pandas", "Plotly", "Streamlit", "SQLite"],
-        what: "Interactive web dashboard for a synthetic sales dataset — filter by region, date range, product.",
-        steps: ["Generate synthetic sales data with faker + pandas", "Store in SQLite, query with pandas read_sql", "Streamlit sidebar: date picker, multiselect region filter", "3 charts: line (revenue over time), bar (top products), map", "Deploy free to Streamlit Community Cloud"],
-        learns: "Streamlit state, Plotly Express, SQLite queries, dashboard layout"
-      },
-      {
-        name: "End-to-end data pipeline on AWS",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["S3", "AWS Glue", "Athena", "Redshift", "QuickSight"],
-        what: "Raw CSV lands on S3 → Glue crawler catalogs it → Athena queries it → QuickSight dashboard.",
-        steps: ["Upload raw sales CSVs to S3 raw/ prefix", "Glue crawler auto-discovers schema into Glue Data Catalog", "Glue ETL job transforms + writes Parquet to S3 processed/", "Athena: query Parquet with standard SQL, no servers", "QuickSight: connect to Athena, build a live dashboard"],
-        learns: "Data lake architecture, Glue catalog, columnar formats, serverless query"
-      }
-    ]
-  },
-  "Machine Learning": {
-    sub: "Train, evaluate, iterate",
-    projects: [
-      {
-        name: "House Price Predictor",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["sklearn", "pandas", "Jupyter"],
-        what: "Predict house prices using the classic Boston/Ames housing dataset with a regression pipeline.",
-        steps: ["Load dataset, EDA: correlations, null heatmap", "Feature engineering: encode categoricals, scale numerics", "Train LinearRegression, Ridge, RandomForestRegressor", "Evaluate with RMSE and R² on held-out test set", "SHAP values to explain which features matter most"],
-        learns: "sklearn Pipeline, cross-validation, SHAP explainability, model comparison"
-      },
-      {
-        name: "Text Classifier with BERT fine-tuning",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["HuggingFace Transformers", "PyTorch", "Datasets"],
-        what: "Fine-tune a BERT model on a sentiment classification task (IMDB or SST-2).",
-        steps: ["Load dataset from HuggingFace datasets library", "Tokenize with AutoTokenizer, create DataLoader", "Fine-tune with Trainer API for 3 epochs", "Evaluate accuracy, F1 on test split", "Serve predictions via FastAPI endpoint"],
-        learns: "Transfer learning, tokenization, HuggingFace Trainer, GPU training basics"
-      },
-      {
-        name: "End-to-end ML with MLflow + SageMaker",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["MLflow", "SageMaker", "S3", "sklearn", "Docker"],
-        what: "Full ML lifecycle: experiment tracking → model registry → SageMaker endpoint deployment.",
-        steps: ["Track 5 experiment runs in MLflow (vary hyperparams)", "Register best model in MLflow Model Registry", "Package model as SageMaker-compatible Docker image", "Deploy as SageMaker real-time inference endpoint", "Write a test script invoking the endpoint, measure latency"],
-        learns: "MLflow autolog, model registry stages, SageMaker SDK, endpoint invocation"
-      }
-    ]
-  },
-  "MLOps": {
-    sub: "Production-grade ML systems",
-    projects: [
-      {
-        name: "Model Serving API with FastAPI + Docker",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["FastAPI", "sklearn", "Docker", "pytest"],
-        what: "Wrap a trained sklearn model in a FastAPI /predict endpoint, containerize it, write tests.",
-        steps: ["Train and pickle a classifier (joblib.dump)", "FastAPI: load model at startup, POST /predict returns label + confidence", "Write pytest tests for happy path and edge cases", "Dockerize: model artifact baked into image", "Add /metrics endpoint returning prediction count"],
-        learns: "Model serialization, API contract design, container packaging, testing ML APIs"
-      },
-      {
-        name: "Drift Detection + Automated Retraining",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["Evidently", "Airflow", "MLflow", "S3"],
-        what: "Monitor production predictions for data drift; auto-trigger retraining when drift exceeds threshold.",
-        steps: ["Log daily prediction batches to S3", "Airflow DAG: daily job runs Evidently drift report vs training reference", "If PSI > 0.2 on any feature, trigger retraining DAG", "Retraining DAG: fetch new data → train → MLflow log → promote if better", "Slack alert when model is retrained and deployed"],
-        learns: "PSI/KL drift metrics, Evidently reports, DAG dependencies, conditional triggers"
-      },
-      {
-        name: "LLM Inference on Kubernetes with KEDA",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["vLLM", "Kubernetes", "KEDA", "Prometheus", "Grafana"],
-        what: "Deploy a Llama model via vLLM on EKS, autoscale replicas based on SQS queue depth with KEDA.",
-        steps: ["Deploy vLLM as Kubernetes Deployment with GPU nodeSelector", "Expose via Kubernetes Service + ALB Ingress", "Send inference requests to SQS queue", "KEDA ScaledObject: scale replicas 1→10 based on SQS depth", "Prometheus scrapes vLLM metrics; Grafana dashboard for TTFT, throughput, GPU util"],
-        learns: "vLLM deployment, KEDA scalers, GPU resource requests, LLM SLO observability"
-      }
-    ]
-  },
-  "AI Engineer": {
-    sub: "LLMs, RAG & agents",
-    projects: [
-      {
-        name: "Chat with your PDF using RAG",
-        level: "d1", badge: "b1", blabel: "Beginner",
-        stack: ["LangChain", "ChromaDB", "OpenAI API", "Streamlit"],
-        what: "Upload a PDF, chunk it, embed it into Chroma, answer questions grounded in the document.",
-        steps: ["PyMuPDF to extract text, split into 512-token chunks", "Embed with OpenAI text-embedding-3-small into ChromaDB", "User asks question → embed query → top-k similarity search", "Stuff retrieved chunks + question into GPT-4o prompt", "Show answer + source chunk references in Streamlit UI"],
-        learns: "RAG pipeline, chunking strategies, vector similarity search, prompt grounding"
-      },
-      {
-        name: "AI Research Agent with Tool Use",
-        level: "d2", badge: "b2", blabel: "Intermediate",
-        stack: ["LangGraph", "Claude / GPT-4o", "Tavily Search", "Python"],
-        what: "An agent that takes a research question, searches the web, reads pages, and writes a summary report.",
-        steps: ["Define tools: web_search(query), read_page(url), write_report(text)", "LangGraph: ReAct loop — reason → pick tool → observe → repeat", "Agent decides when it has enough info to stop", "Output: structured Markdown report with citations", "Add memory: persist conversation history across sessions"],
-        learns: "Tool calling, ReAct loop, LangGraph state machines, agent stopping criteria"
-      },
-      {
-        name: "Production RAG with Evaluation + Observability",
-        level: "d3", badge: "b3", blabel: "Capstone",
-        stack: ["LlamaIndex", "Weaviate", "LangSmith", "Ragas", "FastAPI"],
-        what: "A RAG system with automated evaluation (faithfulness, relevance), tracing every LLM call in LangSmith.",
-        steps: ["Ingest 100+ documents into Weaviate with hybrid search (BM25 + vector)", "FastAPI service wraps LlamaIndex query engine", "All LLM calls traced automatically in LangSmith", "Ragas eval suite runs nightly: faithfulness, answer relevancy, context precision", "Alert if faithfulness score drops below 0.8 in any 24h window"],
-        learns: "RAG evaluation metrics, LangSmith tracing, hybrid search, production AI observability"
-      }
-    ]
-  }
-};
+<hr class="divider">
 
-const nav = document.getElementById('nav');
-const content = document.getElementById('content');
-let current = Object.keys(tracks)[0];
+<div class="section">
+  <div class="section-head">
+    <h2>Two ways to learn</h2>
+    <p>Start with the curriculum to build mental models, then reinforce with projects</p>
+  </div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">📚</div>
+      <h3>Curriculum</h3>
+      <p>Structured concept cards organized by track and topic. Expand any card to see the key concepts, tools, and terminology you need to understand before you build.</p>
+      <a class="feature-link" href="/curriculum">Open curriculum →</a>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔨</div>
+      <h3>Projects</h3>
+      <p>Hands-on project blueprints with a clear problem statement, step-by-step build guide, and what you'll learn. Every track has three projects across difficulty levels.</p>
+      <a class="feature-link" href="/projects">Browse projects →</a>
+    </div>
+  </div>
+</div>
 
-function render(key) {
-  current = key;
-  nav.querySelectorAll('.nb').forEach(b => b.classList.toggle('active', b.dataset.t === key));
-  const t = tracks[key];
-  let html = `<div class="track-header"><span class="track-title">${key}</span><span class="track-sub">${t.sub}</span></div>`;
-  html += `<div class="grid">`;
-  t.projects.forEach((p, i) => {
-    html += `<div class="card" data-i="${i}">
-      <div class="card-top">
-        <span class="card-name">${p.name}</span>
-        <span class="badge ${p.badge}" style="flex-shrink:0;font-size:11px;padding:2px 8px;border-radius:10px;">${p.blabel}</span>
-      </div>
-      <div class="card-tags">${p.stack.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
-      <div style="font-size:12.5px;color:var(--color-text-secondary);line-height:1.5;">${p.what}</div>
-      <div class="card-body">
-        <div class="section-row">
-          <div class="section-label" style="margin-top:8px;">Build steps</div>
-          <ul class="step-list">${p.steps.map(s=>`<li>${s}</li>`).join('')}</ul>
-        </div>
-        <div class="section-row" style="margin-top:8px;">
-          <div class="section-label">You will learn</div>
-          <div class="section-text" style="font-size:12.5px;">${p.learns}</div>
-        </div>
-      </div>
-    </div>`;
-  });
-  html += `</div>`;
-  content.innerHTML = html;
-  content.querySelectorAll('.card').forEach(el => el.addEventListener('click', () => el.classList.toggle('open')));
-}
+<hr class="divider">
 
-Object.keys(tracks).forEach(k => {
-  const b = document.createElement('button');
-  b.className = 'nb'; b.dataset.t = k; b.textContent = k;
-  b.onclick = () => render(k);
-  nav.appendChild(b);
-});
+<div class="section">
+  <div class="section-head">
+    <h2>Three difficulty levels</h2>
+    <p>Each track progresses from beginner to capstone</p>
+  </div>
+  <div class="levels">
+    <div class="level-row">
+      <div class="level-dot" style="background:#1D9E75"></div>
+      <div class="level-name">Beginner</div>
+      <div class="level-desc">Foundational projects you can complete in a few hours. Covers core concepts, tooling setup, and basic workflows.</div>
+    </div>
+    <div class="level-row">
+      <div class="level-dot" style="background:#BA7517"></div>
+      <div class="level-name">Intermediate</div>
+      <div class="level-desc">Multi-service or multi-step builds that reflect real-world patterns. Requires understanding the beginner project.</div>
+    </div>
+    <div class="level-row">
+      <div class="level-dot" style="background:#D4537E"></div>
+      <div class="level-name">Capstone</div>
+      <div class="level-desc">Production-grade systems that combine multiple tools and services. Portfolio-worthy and interview-ready.</div>
+    </div>
+  </div>
+</div>
 
-render(current);
-</script>
+<footer>DevPath &mdash; DevOps, MLOps &amp; AI Engineering learning platform</footer>
+
+</body>
+</html>

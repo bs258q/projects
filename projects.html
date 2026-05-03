@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — DevPath</title>
+<style>
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg: #0a0a0a;
+  --surface: #111;
+  --surface-2: #161616;
+  --border: #222;
+  --border-2: #2e2e2e;
+  --text: #ededed;
+  --text-2: #888;
+  --text-3: #555;
+  --green: #1D9E75;
+  --border-primary: #3a3a3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); line-height: 1.6; }
+a { color: inherit; text-decoration: none; }
+
+.site-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 56px; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,.92); backdrop-filter: blur(12px); z-index: 100; }
+.nav-logo { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.nav-logo span { color: var(--green); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--text-2); transition: all .15s; }
+.nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-2); }
+.nav-link.active { font-weight: 500; }
+
+.page-header { padding: 2.5rem 2rem 1.5rem; border-bottom: 0.5px solid var(--border); max-width: 960px; margin: 0 auto; }
+.page-header h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px; }
+.page-header p { font-size: 14px; color: var(--text-2); }
+
+.content-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+
+.track-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
+.track-btn { padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 0.5px solid var(--border-2); background: var(--surface); color: var(--text-2); font-weight: 400; transition: all .15s; }
+.track-btn:hover, .track-btn.active { background: var(--surface-2); color: var(--text); border-color: var(--border-primary); }
+.track-btn.active { font-weight: 500; }
+
+.legend { display: flex; gap: 16px; margin-bottom: 1rem; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-2); }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.track-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--border); padding-bottom: 0.75rem; }
+.track-title { font-size: 18px; font-weight: 500; }
+.track-sub { font-size: 13px; color: var(--text-2); }
+
+.p-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+
+.card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color .15s; }
+.card:hover { border-color: var(--border-2); }
+.card.open { border-color: var(--border-primary); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.card-name { font-size: 14px; font-weight: 500; flex: 1; padding-right: 8px; line-height: 1.4; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 400; flex-shrink: 0; }
+.badge-beg { background: #0d2e24; color: #1D9E75; }
+.badge-int { background: #2a1c06; color: #BA7517; }
+.badge-cap { background: #2a0e1a; color: #D4537E; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.tag { font-size: 11px; padding: 2px 7px; border-radius: 8px; background: var(--surface-2); color: var(--text-2); border: 0.5px solid var(--border); }
+.card-what { font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+.card-body { display: none; margin-top: 10px; border-top: 0.5px solid var(--border); padding-top: 10px; }
+.card.open .card-body { display: block; }
+.section-label-sm { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); margin-bottom: 4px; margin-top: 8px; }
+.step-list { list-style: none; padding: 0; }
+.step-list li { font-size: 12.5px; color: var(--text-2); padding: 3px 0; border-bottom: 0.5px solid var(--border); line-height: 1.5; }
+.step-list li:last-child { border-bottom: none; }
+.step-list li::before { content: "-> "; color: var(--text-3); }
+.learns-text { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
+
+footer { border-top: 0.5px solid var(--border); padding: 1.5rem 2rem; text-align: center; font-size: 12.5px; color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/"><span>Dev</span>Path</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/curriculum">Curriculum</a>
+    <a class="nav-link active" href="/projects">Projects</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Projects</h1>
+  <p>Hands-on builds by track — click any card to see the step-by-step guide</p>
+</div>
+
+<div class="content-wrap">
+  <div class="track-nav" id="trackNav"></div>
+  <div class="legend">
+    <div class="leg"><span class="leg-dot" style="background:#1D9E75"></span>Beginner</div>
+    <div class="leg"><span class="leg-dot" style="background:#BA7517"></span>Intermediate</div>
+    <div class="leg"><span class="leg-dot" style="background:#D4537E"></span>Capstone</div>
+  </div>
+  <div id="trackContent"></div>
+</div>
+
+<footer>DevPath &mdash; DevOps, MLOps &amp; AI Engineering learning platform</footer>
+
+<script>
+const tracks = {
+  "Docker": {
+    sub: "Build & ship containers",
+    projects: [
+      { name: "Containerize a Python Flask App", level: "beg", blabel: "Beginner", stack: ["Python", "Flask", "Docker"], what: "Wrap a simple REST API in a Docker image and run it locally.", steps: ["Write a 3-route Flask app (GET /, /health, /echo)", "Write a Dockerfile with multi-stage build", "Build image and run with docker run -p 5000:5000", "Push image to Docker Hub or AWS ECR"], learns: "Dockerfile syntax, image layers, port mapping, container lifecycle" },
+      { name: "Multi-service App with Compose", level: "int", blabel: "Intermediate", stack: ["Docker Compose", "Flask", "Redis", "Nginx"], what: "A to-do API backed by Redis, with Nginx as a reverse proxy — all wired with docker compose.", steps: ["Flask app stores tasks in Redis (redis-py)", "docker-compose.yml: 3 services (app, redis, nginx)", "nginx.conf proxies /api to Flask container", "Add healthcheck: and depends_on: with condition"], learns: "Service networking, named volumes, compose overrides, healthchecks" },
+      { name: "CI pipeline that builds & scans Docker images", level: "cap", blabel: "Capstone", stack: ["GitHub Actions", "Docker", "Trivy", "ECR"], what: "On every PR: build the Docker image, scan it for CVEs, push to ECR only if clean.", steps: ["Write GitHub Actions workflow triggered on pull_request", "Use docker/build-push-action to build image", "Run Trivy vulnerability scanner as a step", "Push to ECR using OIDC (no static keys)", "Fail the workflow if critical CVEs found"], learns: "Container security scanning, OIDC auth, conditional steps, ECR lifecycle" }
+    ]
+  },
+  "Terraform": {
+    sub: "Provision real infrastructure",
+    projects: [
+      { name: "Static Website on S3 + CloudFront", level: "beg", blabel: "Beginner", stack: ["Terraform", "AWS S3", "CloudFront", "ACM"], what: "Provision an S3 bucket with static hosting + CloudFront CDN + HTTPS cert — all in Terraform.", steps: ["main.tf: aws_s3_bucket with website config", "ACM certificate with DNS validation in Route 53", "CloudFront distribution pointing to S3 origin", "Output the CloudFront URL", "terraform destroy to clean up"], learns: "Providers, resource dependencies, outputs, remote state on S3" },
+      { name: "VPC + EC2 + RDS in 3-tier architecture", level: "int", blabel: "Intermediate", stack: ["Terraform", "VPC", "EC2", "RDS", "SGs"], what: "A classic 3-tier network: public subnet (EC2 web), private subnet (RDS), proper security groups.", steps: ["VPC with 2 public + 2 private subnets across AZs", "Bastion EC2 in public subnet", "RDS Postgres in private subnet with SG only allowing EC2 SG", "ALB in front of EC2 with HTTPS listener", "Wrap everything in a reusable Terraform module"], learns: "Modules, depends_on, data sources, remote state, SG referencing" },
+      { name: "EKS Cluster from scratch", level: "cap", blabel: "Capstone", stack: ["Terraform", "EKS", "Karpenter", "IRSA", "Helm"], what: "Full EKS cluster with managed node groups, Karpenter autoscaler, and IRSA for pod-level AWS access.", steps: ["Use terraform-aws-modules/eks module", "Add Karpenter NodePool + EC2NodeClass", "Configure IRSA for a sample workload reading S3", "Install AWS Load Balancer Controller via Helm provider", "Deploy a test app and verify pod autoscaling"], learns: "EKS internals, OIDC trust, Karpenter provisioner config, Helm in Terraform" }
+    ]
+  },
+  "GitHub Actions": {
+    sub: "Automate everything",
+    projects: [
+      { name: "Lint + Test on every PR", level: "beg", blabel: "Beginner", stack: ["GitHub Actions", "Python", "pytest", "flake8"], what: "Auto-run linting and unit tests on every pull request to your Python repo.", steps: ["Create .github/workflows/ci.yml", "Trigger on: pull_request to main", "Steps: checkout, setup-python, pip install, flake8, pytest", "Add a status badge to your README", "Add matrix: to test Python 3.10 and 3.11"], learns: "Workflow YAML, runners, matrix builds, PR status checks" },
+      { name: "Deploy to ECS on merge to main", level: "int", blabel: "Intermediate", stack: ["GitHub Actions", "Docker", "ECR", "ECS Fargate"], what: "On merge to main: build Docker image, push to ECR, update ECS service with new image.", steps: ["Configure OIDC role trust for the repo in AWS IAM", "Build and push image to ECR in workflow", "Use aws ecs update-service --force-new-deployment", "Add a Slack notification step on failure", "Gate deploy behind a required reviewer approval"], learns: "OIDC keyless auth, secrets management, ECS deploy, environment protection rules" },
+      { name: "Terraform plan/apply pipeline", level: "cap", blabel: "Capstone", stack: ["GitHub Actions", "Terraform", "S3 backend", "Atlantis pattern"], what: "PR triggers terraform plan (posted as comment), merge triggers terraform apply — Atlantis-style.", steps: ["terraform plan on pull_request, capture output", "Post plan output as PR comment via gh CLI", "terraform apply only on push to main after approval", "Store state in S3 with DynamoDB lock", "Add drift detection: scheduled plan on existing infra"], learns: "GitOps IaC workflow, plan output artifacts, DynamoDB locking, scheduled workflows" }
+    ]
+  },
+  "AWS Networking": {
+    sub: "VPCs, routing & security",
+    projects: [
+      { name: "Secure VPC with public/private subnets", level: "beg", blabel: "Beginner", stack: ["AWS Console", "VPC", "Subnets", "IGW", "NAT"], what: "Manually build a VPC with 1 public and 1 private subnet, then verify routing from a bastion host.", steps: ["Create VPC (10.0.0.0/16), public subnet (10.0.1.0/24), private subnet (10.0.2.0/24)", "Attach Internet Gateway, update public route table", "Create NAT Gateway in public subnet, update private route table", "Launch EC2 in each subnet, SSH to bastion, hop to private EC2", "Verify private EC2 can reach internet via NAT but is not reachable directly"], learns: "CIDR, route table evaluation, NAT vs IGW, security group rules" },
+      { name: "ALB + HTTPS with ACM cert", level: "int", blabel: "Intermediate", stack: ["ALB", "ACM", "Route 53", "EC2 target group"], what: "Set up an Application Load Balancer with an HTTPS listener and a real TLS certificate.", steps: ["Request ACM cert for your domain, validate via Route 53 DNS", "Create ALB in public subnets with HTTP (80) to HTTPS redirect", "Create target group with 2 EC2 instances running a simple web server", "HTTPS listener (443) with ACM cert, forward to target group", "Test health checks and simulate one instance failure"], learns: "ACM DNS validation, listener rules, target group health checks, SSL offloading" },
+      { name: "Multi-tier app with SQS decoupling", level: "cap", blabel: "Capstone", stack: ["ALB", "ECS Fargate", "SQS", "RDS", "CloudFront"], what: "Web frontend, SQS queue, async worker, RDS — full decoupled architecture behind CloudFront.", steps: ["Frontend ECS service sends jobs to SQS FIFO queue", "Worker ECS service polls SQS, writes results to RDS", "CloudFront to ALB to ECS; S3 for static assets", "SQS DLQ for failed messages + CloudWatch alarm", "IAM task roles (no hard-coded AWS keys anywhere)"], learns: "Async decoupling, ECS task IAM roles, FIFO vs standard queues, DLQ patterns" }
+    ]
+  },
+  "Python": {
+    sub: "Build real scripts & APIs",
+    projects: [
+      { name: "AWS Resource Cost Reporter", level: "beg", blabel: "Beginner", stack: ["Python", "boto3", "pandas"], what: "Script that pulls AWS Cost Explorer data and prints a cost-by-service table.", steps: ["Use boto3 ce.get_cost_and_usage() for last 30 days", "Parse JSON response into a pandas DataFrame", "Sort by cost descending, print top 10 services", "Export to CSV and add a basic bar chart with matplotlib", "Schedule as a Lambda or cron job"], learns: "boto3, JSON parsing, pandas, environment-based AWS credential management" },
+      { name: "REST API with FastAPI + Postgres", level: "int", blabel: "Intermediate", stack: ["FastAPI", "SQLAlchemy", "Postgres", "Docker"], what: "A full CRUD API for a books resource, containerized and connected to a Postgres DB.", steps: ["FastAPI app with GET/POST/PUT/DELETE /books endpoints", "SQLAlchemy ORM models + Alembic migrations", "Pydantic schemas for request/response validation", "Docker Compose: api + postgres services", "Add /health endpoint and basic error handling with HTTPException"], learns: "FastAPI routing, Pydantic v2, async SQLAlchemy, database migrations" },
+      { name: "Async job queue with Redis & Celery", level: "cap", blabel: "Capstone", stack: ["FastAPI", "Celery", "Redis", "Flower", "Docker"], what: "API accepts long-running jobs (image resize, report generation), returns a job ID, processes async.", steps: ["FastAPI POST /jobs returns job_id immediately", "Celery worker picks up task from Redis broker", "GET /jobs/{id} polls task state (PENDING to SUCCESS/FAILURE)", "Add Flower dashboard to monitor workers", "Deploy as 3 containers: api, worker, redis"], learns: "Task queues, async job patterns, Celery result backend, worker scaling" }
+    ]
+  },
+  "Data Science": {
+    sub: "Explore & analyse data",
+    projects: [
+      { name: "EDA on a real public dataset", level: "beg", blabel: "Beginner", stack: ["pandas", "seaborn", "Jupyter"], what: "Download a Kaggle dataset (e.g. Titanic, Airbnb, Netflix), answer 5 business questions with charts.", steps: ["Load CSV with pandas, check dtypes and nulls", "Write 5 questions: e.g. 'Which cities have highest avg price?'", "Answer each with a groupby + seaborn chart", "Handle missing values: drop vs fill with median/mode", "Write a 1-page summary of findings in Markdown"], learns: "EDA workflow, groupby, value_counts, matplotlib subplots, storytelling with data" },
+      { name: "Sales Dashboard with Plotly + Streamlit", level: "int", blabel: "Intermediate", stack: ["pandas", "Plotly", "Streamlit", "SQLite"], what: "Interactive web dashboard for a synthetic sales dataset — filter by region, date range, product.", steps: ["Generate synthetic sales data with faker + pandas", "Store in SQLite, query with pandas read_sql", "Streamlit sidebar: date picker, multiselect region filter", "3 charts: line (revenue over time), bar (top products), map", "Deploy free to Streamlit Community Cloud"], learns: "Streamlit state, Plotly Express, SQLite queries, dashboard layout" },
+      { name: "End-to-end data pipeline on AWS", level: "cap", blabel: "Capstone", stack: ["S3", "AWS Glue", "Athena", "Redshift", "QuickSight"], what: "Raw CSV lands on S3, Glue crawler catalogs it, Athena queries it, QuickSight dashboard.", steps: ["Upload raw sales CSVs to S3 raw/ prefix", "Glue crawler auto-discovers schema into Glue Data Catalog", "Glue ETL job transforms + writes Parquet to S3 processed/", "Athena: query Parquet with standard SQL, no servers", "QuickSight: connect to Athena, build a live dashboard"], learns: "Data lake architecture, Glue catalog, columnar formats, serverless query" }
+    ]
+  },
+  "Machine Learning": {
+    sub: "Train, evaluate, iterate",
+    projects: [
+      { name: "House Price Predictor", level: "beg", blabel: "Beginner", stack: ["sklearn", "pandas", "Jupyter"], what: "Predict house prices using the classic Boston/Ames housing dataset with a regression pipeline.", steps: ["Load dataset, EDA: correlations, null heatmap", "Feature engineering: encode categoricals, scale numerics", "Train LinearRegression, Ridge, RandomForestRegressor", "Evaluate with RMSE and R-squared on held-out test set", "SHAP values to explain which features matter most"], learns: "sklearn Pipeline, cross-validation, SHAP explainability, model comparison" },
+      { name: "Text Classifier with BERT fine-tuning", level: "int", blabel: "Intermediate", stack: ["HuggingFace Transformers", "PyTorch", "Datasets"], what: "Fine-tune a BERT model on a sentiment classification task (IMDB or SST-2).", steps: ["Load dataset from HuggingFace datasets library", "Tokenize with AutoTokenizer, create DataLoader", "Fine-tune with Trainer API for 3 epochs", "Evaluate accuracy, F1 on test split", "Serve predictions via FastAPI endpoint"], learns: "Transfer learning, tokenization, HuggingFace Trainer, GPU training basics" },
+      { name: "End-to-end ML with MLflow + SageMaker", level: "cap", blabel: "Capstone", stack: ["MLflow", "SageMaker", "S3", "sklearn", "Docker"], what: "Full ML lifecycle: experiment tracking, model registry, SageMaker endpoint deployment.", steps: ["Track 5 experiment runs in MLflow (vary hyperparams)", "Register best model in MLflow Model Registry", "Serialize model with joblib and package as SageMaker Docker image", "Deploy as SageMaker real-time inference endpoint", "Write a test script invoking the endpoint, measure latency"], learns: "MLflow autolog, model registry stages, SageMaker SDK, endpoint invocation" }
+    ]
+  },
+  "MLOps": {
+    sub: "Production-grade ML systems",
+    projects: [
+      { name: "Model Serving API with FastAPI + Docker", level: "beg", blabel: "Beginner", stack: ["FastAPI", "sklearn", "Docker", "pytest"], what: "Wrap a trained sklearn model in a FastAPI /predict endpoint, containerize it, write tests.", steps: ["Train a classifier and save it with joblib", "FastAPI: load model at startup, POST /predict returns label + confidence", "Write pytest tests for happy path and edge cases", "Dockerize: model artifact baked into image", "Add /metrics endpoint returning prediction count"], learns: "Model serialization, API contract design, container packaging, testing ML APIs" },
+      { name: "Drift Detection + Automated Retraining", level: "int", blabel: "Intermediate", stack: ["Evidently", "Airflow", "MLflow", "S3"], what: "Monitor production predictions for data drift; auto-trigger retraining when drift exceeds threshold.", steps: ["Log daily prediction batches to S3", "Airflow DAG: daily job runs Evidently drift report vs training reference", "If PSI > 0.2 on any feature, trigger retraining DAG", "Retraining DAG: fetch new data, train, MLflow log, promote if better", "Slack alert when model is retrained and deployed"], learns: "PSI/KL drift metrics, Evidently reports, DAG dependencies, conditional triggers" },
+      { name: "LLM Inference on Kubernetes with KEDA", level: "cap", blabel: "Capstone", stack: ["vLLM", "Kubernetes", "KEDA", "Prometheus", "Grafana"], what: "Deploy a Llama model via vLLM on EKS, autoscale replicas based on SQS queue depth with KEDA.", steps: ["Deploy vLLM as Kubernetes Deployment with GPU nodeSelector", "Expose via Kubernetes Service + ALB Ingress", "Send inference requests to SQS queue", "KEDA ScaledObject: scale replicas 1 to 10 based on SQS depth", "Prometheus scrapes vLLM metrics; Grafana dashboard for TTFT, throughput, GPU util"], learns: "vLLM deployment, KEDA scalers, GPU resource requests, LLM SLO observability" }
+    ]
+  },
+  "AI Engineer": {
+    sub: "LLMs, RAG & agents",
+    projects: [
+      { name: "Chat with your PDF using RAG", level: "beg", blabel: "Beginner", stack: ["LangChain", "ChromaDB", "OpenAI API", "Streamlit"], what: "Upload a PDF, chunk it, embed it into Chroma, answer questions grounded in the document.", steps: ["PyMuPDF to extract text, split into 512-token chunks", "Embed with OpenAI text-embedding-3-small into ChromaDB", "User asks question: embed query, top-k similarity search", "Stuff retrieved chunks + question into GPT-4o prompt", "Show answer + source chunk references in Streamlit UI"], learns: "RAG pipeline, chunking strategies, vector similarity search, prompt grounding" },
+      { name: "AI Research Agent with Tool Use", level: "int", blabel: "Intermediate", stack: ["LangGraph", "Claude / GPT-4o", "Tavily Search", "Python"], what: "An agent that takes a research question, searches the web, reads pages, and writes a summary report.", steps: ["Define tools: web_search(query), read_page(url), write_report(text)", "LangGraph: ReAct loop — reason, pick tool, observe, repeat", "Agent decides when it has enough info to stop", "Output: structured Markdown report with citations", "Add memory: persist conversation history across sessions"], learns: "Tool calling, ReAct loop, LangGraph state machines, agent stopping criteria" },
+      { name: "Production RAG with Evaluation + Observability", level: "cap", blabel: "Capstone", stack: ["LlamaIndex", "Weaviate", "LangSmith", "Ragas", "FastAPI"], what: "A RAG system with automated evaluation (faithfulness, relevance), tracing every LLM call in LangSmith.", steps: ["Ingest 100+ documents into Weaviate with hybrid search (BM25 + vector)", "FastAPI service wraps LlamaIndex query engine", "All LLM calls traced automatically in LangSmith", "Ragas eval suite runs nightly: faithfulness, answer relevancy, context precision", "Alert if faithfulness score drops below 0.8 in any 24h window"], learns: "RAG evaluation metrics, LangSmith tracing, hybrid search, production AI observability" }
+    ]
+  }
+};
+
+const trackNav = document.getElementById('trackNav');
+const trackContent = document.getElementById('trackContent');
+
+function el(tag, className) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  return e;
+}
+
+const badgeClass = { beg: 'badge-beg', int: 'badge-int', cap: 'badge-cap' };
+
+function renderTrack(key) {
+  trackNav.querySelectorAll('.track-btn').forEach(b => b.classList.toggle('active', b.dataset.t === key));
+  const track = tracks[key];
+  const frag = document.createDocumentFragment();
+
+  const header = el('div', 'track-header');
+  const titleEl = el('span', 'track-title');
+  titleEl.textContent = key;
+  const subEl = el('span', 'track-sub');
+  subEl.textContent = track.sub;
+  header.append(titleEl, subEl);
+  frag.append(header);
+
+  const grid = el('div', 'p-grid');
+
+  for (const project of track.projects) {
+    const card = el('div', 'card');
+
+    const top = el('div', 'card-top');
+    const nameEl = el('span', 'card-name');
+    nameEl.textContent = project.name;
+    const badge = el('span', `badge ${badgeClass[project.level]}`);
+    badge.textContent = project.blabel;
+    top.append(nameEl, badge);
+
+    const tags = el('div', 'card-tags');
+    for (const s of project.stack) {
+      const tag = el('span', 'tag');
+      tag.textContent = s;
+      tags.append(tag);
+    }
+
+    const what = el('div', 'card-what');
+    what.textContent = project.what;
+
+    const body = el('div', 'card-body');
+
+    const stepsLabel = el('div', 'section-label-sm');
+    stepsLabel.textContent = 'Build steps';
+    const stepList = el('ul', 'step-list');
+    for (const step of project.steps) {
+      const li = document.createElement('li');
+      li.textContent = step;
+      stepList.append(li);
+    }
+
+    const learnsLabel = el('div', 'section-label-sm');
+    learnsLabel.textContent = 'You will learn';
+    const learnsText = el('div', 'learns-text');
+    learnsText.textContent = project.learns;
+
+    body.append(stepsLabel, stepList, learnsLabel, learnsText);
+    card.append(top, tags, what, body);
+    card.addEventListener('click', () => card.classList.toggle('open'));
+    grid.append(card);
+  }
+
+  frag.append(grid);
+  trackContent.replaceChildren(frag);
+}
+
+for (const key of Object.keys(tracks)) {
+  const btn = el('button', 'track-btn');
+  btn.dataset.t = key;
+  btn.textContent = key;
+  btn.addEventListener('click', () => renderTrack(key));
+  trackNav.append(btn);
+}
+
+renderTrack(Object.keys(tracks)[0]);
+</script>
+
+</body>
+</html>
