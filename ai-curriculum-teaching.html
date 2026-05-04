@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Curriculum Teaching — DevPath</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --surface-2: #161616;
+    --text: #e8e8e8;
+    --text-muted: #666;
+    --green: #1D9E75;
+    --border: #222;
+    --indigo: #6366f1;
+    --sky: #0ea5e9;
+    --amber: #f59e0b;
+    --emerald: #10b981;
+    --pink: #ec4899;
+    --orange: #f97316;
+    --violet: #8b5cf6;
+    --cyan: #06b6d4;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', system-ui, sans-serif; min-height: 100vh; }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 10; }
+  .nav-logo { font-size: 15px; font-weight: 700; letter-spacing: -.3px; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link { padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--text-muted); transition: background .15s, color .15s; }
+  .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface-2); }
+  .nav-link.active { font-weight: 500; }
+
+  /* PAGE HEADER */
+  .page-header { padding: 36px 24px 0; max-width: 960px; margin: 0 auto; }
+  .page-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--indigo); margin-bottom: 6px; }
+  .page-title { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 8px; }
+  .page-sub { font-size: 13px; color: var(--text-muted); max-width: 600px; line-height: 1.6; }
+
+  /* TABS */
+  .tabs-wrap { padding: 24px 24px 0; max-width: 960px; margin: 0 auto; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 13px; padding: 8px 14px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; white-space: nowrap; transition: color .15s, border-color .15s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--indigo); border-bottom-color: var(--indigo); font-weight: 600; }
+
+  /* CONTENT */
+  .content { padding: 28px 24px 60px; max-width: 960px; margin: 0 auto; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .panel-intro { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.7; }
+  .panel-intro strong { color: var(--text); }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 10px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+
+  /* EXPANDABLE CARD */
+  .exp-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; cursor: pointer; transition: border-color .15s; }
+  .exp-card.open { border-color: var(--card-accent, var(--indigo)); }
+  .exp-card-head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .exp-card-title { display: flex; align-items: center; gap: 8px; }
+  .exp-card-title .icon { font-size: 20px; }
+  .exp-card-title .label { font-size: 14px; font-weight: 600; color: var(--text); }
+  .exp-card-chevron { font-size: 12px; color: var(--text-muted); flex-shrink: 0; margin-left: 8px; }
+  .exp-card-body { display: none; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 12px; }
+  .exp-card.open .exp-card-body { display: block; }
+  .exp-card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+  .bullet-list { list-style: none; padding: 0; }
+  .bullet-list li { font-size: 12.5px; color: var(--text-muted); padding: 4px 0; border-bottom: 1px solid var(--surface-2); line-height: 1.5; }
+  .bullet-list li:last-child { border-bottom: none; }
+  .bullet-arrow { margin-right: 6px; }
+
+  /* CURRICULUM LAYERS */
+  .layer { margin-bottom: 24px; }
+  .layer-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .layer-bar { width: 4px; height: 22px; border-radius: 2px; flex-shrink: 0; }
+  .layer-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .layer-weeks { font-size: 12px; color: var(--text-muted); margin-left: 8px; }
+  .topic-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .topic-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+
+  /* TOOL CARD */
+  .tool-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .tool-cat { font-size: 11px; font-weight: 500; margin-top: 1px; }
+  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 4px; margin-top: 10px; }
+  .section-label:first-child { margin-top: 0; }
+
+  /* PROJECTS */
+  .level-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+  .proj-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; border-left: 4px solid var(--card-accent, var(--indigo)); }
+  .proj-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .stack-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .chip { font-size: 11px; padding: 2px 8px; border-radius: 8px; border-width: 1px; border-style: solid; }
+  .proj-what { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .teaches-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 3px; }
+  .teaches-val { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .proj-group { margin-bottom: 24px; }
+
+  /* MINDSET */
+  .mindset-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+  .mindset-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .mindset-head .icon { font-size: 20px; }
+  .mindset-head .label { font-size: 14px; font-weight: 600; color: var(--text); }
+  .mindset-body { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
+  .habit-box { background: #071a0e; border-left: 3px solid var(--green); border-radius: 8px; padding: 10px 12px; }
+  .habit-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--green); margin-bottom: 4px; }
+  .habit-text { font-size: 12.5px; color: #86efac; line-height: 1.6; }
+
+  /* MISTAKES */
+  .mistake-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .mistake-num-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: #f87171; margin-bottom: 4px; }
+  .mistake-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .why-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: #fbbf24; margin-bottom: 4px; }
+  .why-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+  .fix-box { background: #071a0e; border-radius: 10px; padding: 10px 12px; }
+  .fix-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--green); margin-bottom: 4px; }
+  .fix-text { font-size: 12.5px; color: #86efac; line-height: 1.6; }
+
+  @media (max-width: 680px) {
+    .mistake-card { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .page-title { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">DevPath</div>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="curriculum.html">Curriculum</a>
+    <a class="nav-link" href="projects.html">Projects</a>
+    <a class="nav-link" href="langchain-teaching-path.html">LangChain</a>
+    <a class="nav-link active" href="ai-curriculum-teaching.html">AI Teaching</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-label">Instructor Guide</div>
+  <h1 class="page-title">Teaching AI Skills That Actually Prepare Students for the Real World</h1>
+  <p class="page-sub">A full framework for training beginners to become production-ready AI engineers — not just prompt engineers.</p>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('philosophy', this)">🧠 Teaching Philosophy</button>
+    <button class="tab-btn" onclick="switchTab('curriculum', this)">🗺️ AI Curriculum</button>
+    <button class="tab-btn" onclick="switchTab('tools', this)">🛠️ AI Tools Hands-On</button>
+    <button class="tab-btn" onclick="switchTab('projects', this)">🚀 Real Projects</button>
+    <button class="tab-btn" onclick="switchTab('mindset', this)">💡 AI Mindset</button>
+    <button class="tab-btn" onclick="switchTab('mistakes', this)">⚠️ What NOT To Do</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- PHILOSOPHY -->
+  <div class="tab-panel active" id="panel-philosophy">
+    <p class="panel-intro">Before you decide which tools or frameworks to teach, you need to nail the <strong>underlying teaching principles</strong>. The AI tool landscape changes every quarter. Your curriculum will outlive any specific tool only if it's built on the right philosophy.</p>
+    <div class="grid-2">
+
+      <div class="exp-card" style="--card-accent:#6366f1" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title"><span class="icon">🎯</span><span class="label">Teach Outcomes, Not Tools</span></div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <p class="exp-card-desc">The AI tool landscape changes every 3 months. If you teach "how to use Tool X", that knowledge expires. Instead, teach the underlying pattern: "Here's how to evaluate any new AI tool, integrate it, and measure if it's working." Students who understand the why can pick up any new tool in a day.</p>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Teach: "What problem does this AI solve?" before "How do I use this AI?"</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Always pair a tool with a real business use case, not a toy demo</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>After every tool lesson: "What would you replace this with if it disappeared tomorrow?"</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>The skill is adaptability — not memorizing API calls</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#0ea5e9" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title"><span class="icon">🤝</span><span class="label">AI as a Collaborator, Not a Shortcut</span></div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <p class="exp-card-desc">The biggest trap beginners fall into: using AI to skip thinking. Students who let AI do their thinking never build the mental models to catch AI mistakes. And AI WILL make mistakes. Train them to use AI to go faster — not to go without thinking.</p>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Rule: write your own attempt before asking AI to generate</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Have students spot errors in AI-generated code — intentionally introduce bugs into AI output</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Teach: "AI is your junior dev. You are the senior. Review everything."</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Critical thinking is 10x more valuable than prompt engineering tricks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#f59e0b" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title"><span class="icon">💥</span><span class="label">Show Real Failures, Not Just Wins</span></div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <p class="exp-card-desc">Every AI demo you see online is cherry-picked. Students need to see hallucinations, bad RAG retrievals, failed agent loops, and model drift in production. If they only see perfect demos, they'll be blindsided the moment something breaks at work.</p>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Dedicate one full session to "AI failure modes" with live examples</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Show a hallucinating LLM confidently giving wrong medical/legal info</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Show a RAG pipeline returning irrelevant chunks and how to debug it</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Show a fine-tuned model that overfit to training data — and how to detect it</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#10b981" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title"><span class="icon">🏭</span><span class="label">Ground Everything in Production Reality</span></div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <p class="exp-card-desc">Most AI courses stop at "it works in a notebook". Real jobs need models that run at scale, cost under budget, stay accurate over time, and don't hallucinate in front of customers. Teach students to think like an engineer who owns the system 24/7 — not a researcher who runs an experiment once.</p>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Every project must have: latency SLO, cost estimate, failure mode analysis</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Teach monitoring from day 1 — not as an afterthought</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Ask students: "What happens to this system at 100x traffic?"</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Require a /health endpoint and an alert in every deployed project</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CURRICULUM -->
+  <div class="tab-panel" id="panel-curriculum">
+    <p class="panel-intro">A 12-week layered curriculum. Each layer builds on the last. <strong>Do not skip Layer 1.</strong> Students who skip AI fundamentals and jump to agents produce brittle, unmaintainable systems they can't debug.</p>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#6366f1"></div>
+        <span class="layer-title">Layer 1 — AI Literacy (Everyone Needs This)</span>
+        <span class="layer-weeks">Weeks 1–2</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #6366f1">
+          <div class="topic-title">How LLMs Actually Work</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Transformer architecture — intuition, not math</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Tokens, context window, temperature, top-p</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Why LLMs hallucinate and what "grounding" means</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Difference: base model vs instruction-tuned vs RLHF model</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Cost model: input tokens × price + output tokens × price</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #6366f1">
+          <div class="topic-title">Prompt Engineering That Works</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>System prompts vs user prompts — what each controls</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Zero-shot, few-shot, chain-of-thought prompting</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>XML tags and structured output prompting</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>What NOT to put in a prompt (leaking context, injection risks)</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Eval-driven prompting: test 10 inputs before shipping</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#0ea5e9"></div>
+        <span class="layer-title">Layer 2 — Building with AI APIs</span>
+        <span class="layer-weeks">Weeks 3–4</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #0ea5e9">
+          <div class="topic-title">API Integration &amp; Cost Management</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>OpenAI / Anthropic / Gemini SDK — Python + REST</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Streaming responses for real-time UX</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Token counting and cost estimation before deploying</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Retry logic, rate limit handling, exponential backoff</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>API key management — secrets, not hardcoded</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #0ea5e9">
+          <div class="topic-title">Structured Outputs &amp; Function Calling</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Getting JSON back reliably from an LLM</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Tool use / function calling — how agents take actions</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Pydantic schemas for output validation</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Handling partial/malformed LLM responses gracefully</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>When to use function calling vs prompt-only approaches</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#f59e0b"></div>
+        <span class="layer-title">Layer 3 — RAG &amp; Knowledge Systems</span>
+        <span class="layer-weeks">Weeks 5–6</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #f59e0b">
+          <div class="topic-title">RAG Pipeline End-to-End</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Document loading, chunking strategies (fixed, semantic, recursive)</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Embedding models: OpenAI, Cohere, open-source (all-MiniLM)</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Vector databases: Chroma (local), Pinecone (cloud), Weaviate</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Retrieval: cosine similarity, MMR, hybrid search (BM25 + vector)</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Reranking: why top-k retrieval isn't enough</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #f59e0b">
+          <div class="topic-title">RAG Evaluation &amp; Debugging</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Faithfulness: did the answer come from the retrieved context?</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Relevance: did we retrieve the right chunks?</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Ragas framework for automated eval</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Debugging bad retrievals — chunk too big? embedding model mismatch?</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Building a ground truth eval dataset for your domain</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#10b981"></div>
+        <span class="layer-title">Layer 4 — AI Agents &amp; Automation</span>
+        <span class="layer-weeks">Weeks 7–8</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #10b981">
+          <div class="topic-title">Agent Fundamentals</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>ReAct loop: Reason → Act → Observe → Repeat</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Tool definition: search, code execution, API calls, file read/write</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>When agents work well vs when they go off the rails</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Stopping criteria — how does an agent know it's done?</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Human-in-the-loop checkpoints for high-stakes decisions</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #10b981">
+          <div class="topic-title">Multi-Agent &amp; Orchestration</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>LangGraph: state machines for reliable agent flows</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Supervisor + worker agent pattern</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Handoff protocols between agents</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Shared memory: short-term (context) vs long-term (vector store)</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Observability: tracing every LLM call in a multi-agent system</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#ec4899"></div>
+        <span class="layer-title">Layer 5 — MLOps for AI (Job-Ready)</span>
+        <span class="layer-weeks">Weeks 9–10</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #ec4899">
+          <div class="topic-title">Deploying &amp; Serving Models</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>FastAPI wrapper for any model — inference API pattern</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>vLLM for high-throughput LLM serving</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Docker + Kubernetes for model deployments</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Blue/green and canary deploys for model updates</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Cold start problem and how to solve it (pre-warming, min replicas)</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #ec4899">
+          <div class="topic-title">Monitoring &amp; Drift Detection</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>What to monitor: latency P99, token usage, error rate, cost/request</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>LLM-specific metrics: TTFT (time to first token), throughput</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Prompt injection detection</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Data drift: when input distribution shifts from training</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Alert when quality degrades — not just when it crashes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer">
+      <div class="layer-head">
+        <div class="layer-bar" style="background:#f97316"></div>
+        <span class="layer-title">Layer 6 — Fine-Tuning &amp; Customization</span>
+        <span class="layer-weeks">Weeks 11–12</span>
+      </div>
+      <div class="grid-2">
+        <div class="topic-card" style="border-top:3px solid #f97316">
+          <div class="topic-title">When &amp; How to Fine-Tune</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Fine-tune vs RAG vs prompt engineering — decision framework</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Supervised fine-tuning (SFT): data format, dataset size rules of thumb</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>LoRA / QLoRA: why you don't need 8 GPUs to fine-tune</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Unsloth for 2x faster fine-tuning on consumer hardware</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Evaluating fine-tuned models: don't just compare training loss</li>
+          </ul>
+        </div>
+        <div class="topic-card" style="border-top:3px solid #f97316">
+          <div class="topic-title">Data for AI</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Synthetic data generation with LLMs (for SFT datasets)</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Data quality > data quantity — 1000 great examples beat 100k bad ones</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Deduplication, decontamination, PII scrubbing</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Instruction dataset formats: Alpaca, ShareGPT, ChatML</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>DPO: preference data for alignment without RLHF complexity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOOLS -->
+  <div class="tab-panel" id="panel-tools">
+    <p class="panel-intro">Click any tool to see <strong>how to teach it</strong> and the exact hands-on exercises to run. The goal is not tool mastery — it's building the mental model so students can transfer to any new tool in the same category.</p>
+    <div class="grid-3">
+
+      <div class="exp-card" style="--card-accent:#6366f1" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">💻</span>
+            <div><div class="tool-name">GitHub Copilot / Cursor</div><div class="tool-cat" style="color:#6366f1">Coding</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Use it as a pair programmer, not an autocomplete. Teach students to review every suggestion critically. Best exercise: have them fix 5 bugs that Copilot introduced in AI-generated code.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Write a FastAPI endpoint — compare Copilot suggestion vs hand-written</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Ask Copilot to write a function with a deliberate edge case — does it handle it?</li>
+            <li><span class="bullet-arrow" style="color:#6366f1">→</span>Use Cursor's codebase chat to explain an unfamiliar repo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#0ea5e9" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🤖</span>
+            <div><div class="tool-name">Claude / ChatGPT / Gemini</div><div class="tool-cat" style="color:#0ea5e9">LLM APIs</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Teach the difference between using the chatbot UI (for exploration) vs the API (for products). Every student must build at least one app that calls an LLM API programmatically.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Build a document summarizer using the API (not the UI)</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Compare outputs from 3 models on the same prompt — which is more accurate?</li>
+            <li><span class="bullet-arrow" style="color:#0ea5e9">→</span>Measure latency and cost per request across providers</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#f59e0b" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🔗</span>
+            <div><div class="tool-name">LangChain / LlamaIndex</div><div class="tool-cat" style="color:#f59e0b">RAG Frameworks</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">These frameworks abstract a lot of complexity — which is also their danger. Teach students to understand what's happening under the hood before using the abstraction. Otherwise debugging becomes impossible.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Build a RAG pipeline from scratch first (no framework)</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Then rebuild it with LlamaIndex — compare code length and tradeoffs</li>
+            <li><span class="bullet-arrow" style="color:#f59e0b">→</span>Deliberately break retrieval and debug using verbose logging</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#10b981" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🕸️</span>
+            <div><div class="tool-name">LangGraph</div><div class="tool-cat" style="color:#10b981">Agents</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">The mental model is a state machine. Every node is a function. Every edge is a condition. Once that clicks, building reliable agents becomes systematic instead of magical.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Build a 3-node agent: search → summarize → respond</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Add a human approval node before any write operation</li>
+            <li><span class="bullet-arrow" style="color:#10b981">→</span>Trace the full execution graph in LangSmith</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#ec4899" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🤗</span>
+            <div><div class="tool-name">HuggingFace + Unsloth</div><div class="tool-cat" style="color:#ec4899">Fine-tuning</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Start with inference before training. Load a pretrained model, run inference, understand the output format. Then fine-tune. Students who jump to fine-tuning without understanding inference always struggle.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Load Llama 3 with HuggingFace, run 5 inference examples</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Fine-tune on a 100-example custom dataset with Unsloth + QLoRA</li>
+            <li><span class="bullet-arrow" style="color:#ec4899">→</span>Compare base model vs fine-tuned model on 10 test prompts</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#f97316" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">📊</span>
+            <div><div class="tool-name">Weights &amp; Biases / MLflow</div><div class="tool-cat" style="color:#f97316">Experiment Tracking</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Teach this early — not as an afterthought. Students who don't track experiments from day 1 can never reproduce their best results. This is the habit that separates serious ML engineers from notebook hackers.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Log 5 fine-tuning runs with different learning rates to W&amp;B</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Compare runs on a parallel coordinates plot</li>
+            <li><span class="bullet-arrow" style="color:#f97316">→</span>Register best model in MLflow registry, promote to staging</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#8b5cf6" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🗄️</span>
+            <div><div class="tool-name">Weaviate / Chroma / Pinecone</div><div class="tool-cat" style="color:#8b5cf6">Vector DBs</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Teach the underlying concept first: embeddings are coordinates in high-dimensional space, similarity search finds nearest neighbors. Once that mental model is solid, any vector DB makes sense.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#8b5cf6">→</span>Embed 500 documents and do similarity search by hand with numpy first</li>
+            <li><span class="bullet-arrow" style="color:#8b5cf6">→</span>Then rebuild with ChromaDB — see why the abstraction helps</li>
+            <li><span class="bullet-arrow" style="color:#8b5cf6">→</span>Compare hybrid search (BM25 + vector) vs pure vector on 20 queries</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-card" style="--card-accent:#06b6d4" onclick="toggleCard(this)">
+        <div class="exp-card-head">
+          <div class="exp-card-title">
+            <span class="icon">🖥️</span>
+            <div><div class="tool-name">Vercel AI SDK / Streamlit</div><div class="tool-cat" style="color:#06b6d4">AI App UI</div></div>
+          </div>
+          <span class="exp-card-chevron">▼</span>
+        </div>
+        <div class="exp-card-body">
+          <div class="section-label">How to teach it</div>
+          <p class="exp-card-desc">Students need to ship UIs, not just APIs. A deployed app with a real UI gets 10x more attention from employers than a GitHub repo with a great README. Lower the barrier to shipping.</p>
+          <div class="section-label">Hands-on exercises</div>
+          <ul class="bullet-list">
+            <li><span class="bullet-arrow" style="color:#06b6d4">→</span>Build a chat UI with streaming responses in Streamlit in 1 session</li>
+            <li><span class="bullet-arrow" style="color:#06b6d4">→</span>Add conversation history and a clear-chat button</li>
+            <li><span class="bullet-arrow" style="color:#06b6d4">→</span>Deploy to Vercel or Streamlit Cloud — share the URL in 2 hours</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="tab-panel" id="panel-projects">
+    <p class="panel-intro">Every project must be <strong>deployed publicly</strong> with a real URL. A working app beats 10 certificates every time. Sequence matters: beginners ship simple apps, intermediates add production concerns, capstone demonstrates full MLOps maturity.</p>
+
+    <div class="proj-group">
+      <div class="level-badge" style="background:#10101f;color:#6366f1;border:1px solid #6366f130">Beginner</div>
+      <div class="grid-3">
+        <div class="proj-card" style="--card-accent:#6366f1">
+          <div class="proj-name">Personal Study Assistant</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">Claude API</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">Streamlit</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">Python</span>
+          </div>
+          <p class="proj-what">Upload your own notes/PDFs → ask questions → get grounded answers with citations.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">RAG basics, PDF parsing, API integration, streaming UI</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#6366f1">
+          <div class="proj-name">AI Code Reviewer</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">OpenAI API</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">GitHub Actions</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">Python</span>
+          </div>
+          <p class="proj-what">GitHub Action that automatically reviews every PR and posts AI feedback as a comment.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">API calls in CI/CD, prompt engineering for code review, GitHub webhooks</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#6366f1">
+          <div class="proj-name">Meeting Summarizer</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">Whisper</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">GPT-4o</span>
+            <span class="chip" style="background:#10101f;color:#6366f1;border-color:#6366f130">FastAPI</span>
+          </div>
+          <p class="proj-what">Upload an audio recording → transcribe with Whisper → summarize + extract action items.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">Multi-modal AI, chaining models, structured output extraction</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-group">
+      <div class="level-badge" style="background:#001018;color:#0ea5e9;border:1px solid #0ea5e930">Intermediate</div>
+      <div class="grid-3">
+        <div class="proj-card" style="--card-accent:#0ea5e9">
+          <div class="proj-name">Domain-Specific RAG Chatbot</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">LlamaIndex</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">Weaviate</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">FastAPI</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">React</span>
+          </div>
+          <p class="proj-what">A chatbot for a specific domain (medical, legal, DevOps docs) with eval metrics and source display.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">RAG evaluation, hybrid search, production-quality retrieval, UI integration</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#0ea5e9">
+          <div class="proj-name">AI Agent for AWS Cost Optimization</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">LangGraph</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">boto3</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">Claude API</span>
+          </div>
+          <p class="proj-what">Agent that reads your AWS bills, identifies wasteful resources, and emails a weekly report.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">Tool use, multi-step reasoning, real API integration, scheduled agents</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#0ea5e9">
+          <div class="proj-name">Fine-Tuned Classifier</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">HuggingFace</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">Unsloth</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">MLflow</span>
+            <span class="chip" style="background:#001018;color:#0ea5e9;border-color:#0ea5e930">FastAPI</span>
+          </div>
+          <p class="proj-what">Fine-tune a small model on a custom classification task, track experiments, serve as an API.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">End-to-end ML lifecycle, LoRA, experiment tracking, model serving</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="proj-group">
+      <div class="level-badge" style="background:#071a0e;color:#10b981;border:1px solid #10b98130">Capstone</div>
+      <div class="grid-3">
+        <div class="proj-card" style="--card-accent:#10b981">
+          <div class="proj-name">Production RAG with Full Observability</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">LlamaIndex</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Weaviate</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">LangSmith</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Ragas</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Kubernetes</span>
+          </div>
+          <p class="proj-what">A RAG system with automated nightly evals, LangSmith tracing, drift alerts, and K8s deployment.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">Production AI engineering: monitoring, evaluation, reliability, scalability</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#10b981">
+          <div class="proj-name">Multi-Agent Research System</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">LangGraph</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Claude API</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Tavily</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Redis</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Docker</span>
+          </div>
+          <p class="proj-what">Multi-agent system: orchestrator → web search agent → summarizer agent → report writer agent.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">Agent orchestration, shared state, failure recovery, observability across agents</p>
+        </div>
+        <div class="proj-card" style="--card-accent:#10b981">
+          <div class="proj-name">AI-Powered DevOps Copilot</div>
+          <div class="stack-chips">
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">vLLM</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">EKS</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">KEDA</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Prometheus</span>
+            <span class="chip" style="background:#071a0e;color:#10b981;border-color:#10b98130">Grafana</span>
+          </div>
+          <p class="proj-what">Deploy an open-source LLM on EKS that answers infra questions using your runbooks as context.</p>
+          <div class="teaches-label">Teaches</div>
+          <p class="teaches-val">LLM infrastructure, GPU scaling, inference SLOs, cost optimization at scale</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MINDSET -->
+  <div class="tab-panel" id="panel-mindset">
+    <p class="panel-intro">Technical skills get students the interview. <strong>Mindset gets them through the job.</strong> These are the mental habits that separate engineers who grow fast from those who plateau after 6 months.</p>
+    <div class="grid-2">
+
+      <div class="mindset-card">
+        <div class="mindset-head"><span class="icon">📄</span><span class="label">Learn to Read Papers (Just the Important Parts)</span></div>
+        <p class="mindset-body">Students don't need to read every ML paper. But they need to read the Abstract, Introduction, and Results of papers in their domain. Teach them: skim 10 papers → read 3 deeply → implement 1. This is how senior ML engineers stay current.</p>
+        <div class="habit-box">
+          <div class="habit-label">Practical habit to assign</div>
+          <p class="habit-text">Weekly habit: spend 20 min on arxiv.org/list/cs.LG. Read abstracts. If something looks relevant to your work, read the results section.</p>
+        </div>
+      </div>
+
+      <div class="mindset-card">
+        <div class="mindset-head"><span class="icon">📡</span><span class="label">Build a Learning Radar</span></div>
+        <p class="mindset-body">The AI landscape moves too fast to learn everything. Teach students to have a 3-ring radar: things they use daily (master these), things they should understand conceptually (follow these), things they know exist (ignore the noise).</p>
+        <div class="habit-box">
+          <div class="habit-label">Practical habit to assign</div>
+          <p class="habit-text">Monthly exercise: update your personal radar. What's moved from "know exists" to "need to understand"? What can you deprioritize this month?</p>
+        </div>
+      </div>
+
+      <div class="mindset-card">
+        <div class="mindset-head"><span class="icon">📝</span><span class="label">Document Everything You Build</span></div>
+        <p class="mindset-body">AI systems decay silently. The model you deployed 6 months ago is running on different data distributions, with different user prompts, and nobody remembers the original design decisions. Engineers who document their AI systems are the ones companies trust with critical systems.</p>
+        <div class="habit-box">
+          <div class="habit-label">Practical habit to assign</div>
+          <p class="habit-text">For every AI system: write an ADR (Architecture Decision Record). Why this model? Why this chunking strategy? What alternatives were considered and rejected?</p>
+        </div>
+      </div>
+
+      <div class="mindset-card">
+        <div class="mindset-head"><span class="icon">⚖️</span><span class="label">Calibrated Confidence, Not False Humility</span></div>
+        <p class="mindset-body">Students often undersell themselves because AI is moving fast and they feel they'll never know enough. Teach them: you don't need to know everything. You need to know what you know, know what you don't, and be honest about the difference. That's what senior engineers respect.</p>
+        <div class="habit-box">
+          <div class="habit-label">Practical habit to assign</div>
+          <p class="habit-text">Interview practice: "I haven't worked with X directly, but here's how I'd approach it based on my experience with Y." This answer gets you hired. "I don't know" alone does not.</p>
+        </div>
+      </div>
+
+      <div class="mindset-card" style="grid-column: 1 / -1">
+        <div class="mindset-head"><span class="icon">🚢</span><span class="label">The "Production or It Didn't Happen" Rule</span></div>
+        <p class="mindset-body">Any student can get a RAG pipeline working in a Jupyter notebook. The real skill is getting it to work reliably for real users, at real scale, without you watching. Teach students to judge their own work by this standard from day 1.</p>
+        <div class="habit-box">
+          <div class="habit-label">Practical habit to assign</div>
+          <p class="habit-text">At the end of every project, ask: "If 100 users hit this right now, what would break first?" Build the answer into the project. That question is the entire job of an AI infrastructure engineer.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MISTAKES -->
+  <div class="tab-panel" id="panel-mistakes">
+    <p class="panel-intro">These are the <strong>7 most common mistakes</strong> instructors make when building AI curricula — and exactly how to fix each one. Most courses make at least 3 of these. Great courses avoid all of them.</p>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #1</div><div class="mistake-title">Teaching tools before fundamentals</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">Students who learn LangChain before understanding embeddings can't debug when retrieval breaks. They treat the framework as a black box.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Block all frameworks for the first 4 weeks. Build everything from scratch with raw API calls and numpy. Frameworks unlock after they understand what the framework is doing for them.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #2</div><div class="mistake-title">Only showing demos that work</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">Students develop unrealistic expectations. Then on their first job they see an agent loop fail, a hallucination reach a customer, or a model degrade silently — and they panic.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Reserve 20% of every AI session for failure modes. Show real hallucinations, bad retrievals, agent infinite loops. Teach the debugging workflow for each.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #3</div><div class="mistake-title">Skipping evals and just "vibes testing"</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">Vibes testing means changing one thing, eyeballing 3 outputs, and concluding it's better. That's not engineering. Models that pass vibes tests fail in production on edge cases.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Every AI project must have a test set of at least 20 inputs with expected outputs. Students run evals before and after any change. Teach Ragas, promptfoo, or even manual eval spreadsheets.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #4</div><div class="mistake-title">Not teaching cost awareness</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">GPT-4o at $15/1M tokens sounds cheap until a student builds an app that sends 50k tokens per request and gets a $400 bill after 100 users. Real companies get fired over cost surprises.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Teach token counting from day 1. Every project must include a cost estimate: "At 1000 users/day, this costs $X/month." Use tiktoken to measure prompts before deploying.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #5</div><div class="mistake-title">Skipping security and prompt injection</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">Students ship apps with system prompts visible in frontend code, no input sanitization, and no output filtering. Real AI apps at companies have been jailbroken, data-leaked, and abused this way.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Dedicate a full session to AI security: prompt injection attacks, jailbreaking, PII leakage in RAG, API key exposure. Have students attack each other's apps in a red-team exercise.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #6</div><div class="mistake-title">Teaching AI in isolation from software engineering</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">An AI feature nobody can deploy, maintain, or monitor is worthless. Students who can build a RAG pipeline but can't Dockerize it or write a health check for it won't last 6 months at a real company.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">Never let an AI project exist only in a notebook. Every project: Docker container, FastAPI endpoint, GitHub repo, deployed URL, /health endpoint. Non-negotiable.</p></div>
+    </div>
+
+    <div class="mistake-card">
+      <div><div class="mistake-num-label">❌ Mistake #7</div><div class="mistake-title">Copying tutorials without understanding</div></div>
+      <div><div class="why-label">Why it hurts students</div><p class="why-text">Tutorial code works for the tutorial's exact case. The moment a student changes one variable, it breaks — and they have no idea why. This is the most common pattern in beginner AI engineers.</p></div>
+      <div class="fix-box"><div class="fix-label">✅ The fix</div><p class="fix-text">After every tutorial, give students a modified version of the problem that the tutorial doesn't directly solve. Force them to adapt, not copy. The adaptation is where the learning happens.</p></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function switchTab(key, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + key).classList.add('active');
+  }
+
+  function toggleCard(el) {
+    const wasOpen = el.classList.contains('open');
+    el.classList.toggle('open');
+    const chevron = el.querySelector('.exp-card-chevron');
+    if (chevron) chevron.textContent = el.classList.contains('open') ? '▲' : '▼';
+  }
+</script>
+</body>
+</html>
